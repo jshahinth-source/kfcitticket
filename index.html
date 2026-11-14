@@ -1,0 +1,2932 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Kooddoo Fisheries Complex IT Ticketing System</title>
+  
+  <!-- Tailwind CSS & Google Fonts -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['Inter', 'Plus Jakarta Sans', '-apple-system', 'BlinkMacSystemFont', 'sans-serif'],
+            mono: ['JetBrains Mono', 'monospace']
+          },
+          colors: {
+            canvas: {
+              50: '#fcfbfa',
+              100: '#f4f2ee',
+              200: '#e6e2dd',
+              700: '#57534e',
+              800: '#292524',
+              900: '#1c1917',
+              950: '#121110',
+            }
+          }
+        }
+      }
+    }
+  </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Plus+Jakarta+Sans:wght@500;600;700;800&family=JetBrains+Mono:wght@500;600;700&display=swap" rel="stylesheet">
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+  <style>
+    /* ============================================================================
+       GLOBAL INVISIBLE & SMOOTH SCROLLING (NO WHITE SCROLLBAR TRACKS)
+    ============================================================================ */
+    *, *::before, *::after {
+      scrollbar-width: none !important; /* Firefox */
+      -ms-overflow-style: none !important; /* IE & Edge */
+    }
+    *::-webkit-scrollbar {
+      width: 0px !important;
+      height: 0px !important;
+      display: none !important; /* Chrome, Safari, Brave, Opera */
+      background: transparent !important;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    .smooth-scroll-area {
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      overscroll-behavior: contain;
+    }
+
+    /* Crisp Retina Font & Subpixel Rendering */
+    html, body {
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      text-rendering: optimizeLegibility;
+      font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+    }
+
+    /* Smooth Rounded Geometry for Modern Interface */
+    .canvas-panel { border-radius: 24px !important; }
+    .canvas-card { border-radius: 18px !important; }
+    .canvas-input, button, input, select, textarea { border-radius: 12px !important; }
+    
+    body {
+      font-family: 'Inter', 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      transition: background-color 0.45s cubic-bezier(0.16, 1, 0.3, 1), color 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+      min-height: 100vh;
+      position: relative;
+      overflow-x: hidden;
+    }
+
+    /* Vibrant Fluid Ambient Glass Background Glows */
+    body::before, body::after {
+      content: '';
+      position: fixed;
+      border-radius: 50% !important;
+      filter: blur(150px);
+      z-index: 0;
+      pointer-events: none;
+      animation: floatGlow 16s ease-in-out infinite alternate;
+    }
+    
+    /* DARK MODE GLOWS */
+    html.dark body::before {
+      width: 580px; height: 580px;
+      top: -120px; left: -100px;
+      background: rgba(180, 83, 9, 0.22);
+    }
+    html.dark body::after {
+      width: 660px; height: 660px;
+      bottom: -160px; right: -120px;
+      background: rgba(120, 113, 108, 0.24);
+    }
+
+    /* LIGHT MODE GLOWS */
+    html:not(.dark) body::before {
+      width: 580px; height: 580px;
+      top: -120px; left: -100px;
+      background: rgba(2, 132, 199, 0.14);
+    }
+    html:not(.dark) body::after {
+      width: 660px; height: 660px;
+      bottom: -160px; right: -120px;
+      background: rgba(217, 119, 6, 0.11);
+    }
+
+    @keyframes floatGlow {
+      0% { transform: translate(0, 0) scale(1) rotate(0deg); }
+      50% { transform: translate(35px, -30px) scale(1.1) rotate(6deg); }
+      100% { transform: translate(50px, -60px) scale(1.18) rotate(-4deg); }
+    }
+
+    /* HIGH-CLARITY GLASSMORPHISM STYLES (DARK) */
+    html.dark body {
+      background: radial-gradient(circle at 15% 15%, #181716 0%, #0f0e0d 50%, #080807 100%);
+      background-attachment: fixed;
+      color: #f1f5f9;
+    }
+    html.dark .canvas-panel {
+      background: linear-gradient(155deg, rgba(38, 36, 34, 0.42), rgba(18, 17, 16, 0.34));
+      backdrop-filter: blur(40px) saturate(175%);
+      -webkit-backdrop-filter: blur(40px) saturate(175%);
+      border: 1px solid rgba(255, 255, 255, 0.09);
+      box-shadow:
+        0 20px 48px rgba(0, 0, 0, 0.55),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.18),
+        inset 0 -1px 0 0 rgba(255, 255, 255, 0.04);
+    }
+    html.dark .canvas-card {
+      background: linear-gradient(155deg, rgba(46, 44, 42, 0.3), rgba(24, 23, 22, 0.22));
+      backdrop-filter: blur(28px) saturate(160%);
+      -webkit-backdrop-filter: blur(28px) saturate(160%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.32),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.15);
+      transition: all 0.38s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    html.dark .canvas-card:hover {
+      border-color: rgba(255, 255, 255, 0.22);
+      background: linear-gradient(155deg, rgba(56, 53, 50, 0.42), rgba(30, 29, 28, 0.32));
+      transform: translateY(-3px) scale(1.005);
+      box-shadow:
+        0 14px 32px rgba(0, 0, 0, 0.46),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.24);
+    }
+    html.dark .canvas-input {
+      background: rgba(18, 17, 16, 0.48);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      box-shadow: inset 0 1px 2px rgba(0, 0, 0, 0.35), 0 1px 0 rgba(255, 255, 255, 0.06);
+      color: #f8fafc;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html.dark .canvas-input:focus {
+      border-color: rgba(255, 255, 255, 0.42);
+      background: rgba(24, 23, 22, 0.72);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.08), inset 0 1px 2px rgba(0, 0, 0, 0.4);
+    }
+
+    /* HIGH-CLARITY LIGHT THEME GLASSMORPHISM */
+    html:not(.dark) body {
+      background: radial-gradient(circle at 15% 15%, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+      background-attachment: fixed;
+      color: #0f172a;
+    }
+    html:not(.dark) .canvas-panel {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.68), rgba(248, 250, 252, 0.5));
+      backdrop-filter: blur(40px) saturate(185%);
+      -webkit-backdrop-filter: blur(40px) saturate(185%);
+      border: 1px solid rgba(255, 255, 255, 0.85);
+      box-shadow:
+        0 18px 44px rgba(15, 23, 42, 0.07),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1),
+        inset 0 -1px 0 0 rgba(148, 163, 184, 0.18);
+    }
+    html:not(.dark) .canvas-card {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.56), rgba(241, 245, 249, 0.38));
+      backdrop-filter: blur(28px) saturate(175%);
+      -webkit-backdrop-filter: blur(28px) saturate(175%);
+      border: 1px solid rgba(255, 255, 255, 0.82);
+      box-shadow:
+        0 8px 22px rgba(15, 23, 42, 0.05),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.95);
+      transition: all 0.38s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    html:not(.dark) .canvas-card:hover {
+      border-color: rgba(255, 255, 255, 1);
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.82), rgba(248, 250, 252, 0.66));
+      transform: translateY(-3px) scale(1.005);
+      box-shadow:
+        0 14px 30px rgba(15, 23, 42, 0.09),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1);
+    }
+    html:not(.dark) .canvas-input {
+      background: rgba(255, 255, 255, 0.72);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(203, 213, 225, 0.75);
+      box-shadow: inset 0 1px 2px rgba(15, 23, 42, 0.04), 0 1px 0 rgba(255, 255, 255, 0.9);
+      color: #0f172a;
+      transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html:not(.dark) .canvas-input:focus {
+      border-color: rgba(2, 132, 199, 0.75);
+      background: rgba(255, 255, 255, 0.95);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(2, 132, 199, 0.14);
+    }
+
+    /* SMOOTH BUTTON SYSTEM */
+    .btn-flat-primary {
+      background: rgba(15, 23, 42, 0.86);
+      backdrop-filter: blur(20px);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.22), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      font-weight: 600;
+      transition: all 0.35s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    html:not(.dark) .btn-flat-primary {
+      background: #0f172a;
+      color: #ffffff;
+      border: 1px solid rgba(15, 23, 42, 0.2);
+    }
+    .btn-flat-primary:hover { 
+      opacity: 0.94;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.24);
+      transform: translateY(-2px) scale(1.015);
+    }
+    .btn-flat-primary:active { transform: translateY(0) scale(0.98); }
+
+    .btn-flat-accent {
+      background: rgba(51, 65, 85, 0.82);
+      backdrop-filter: blur(20px);
+      color: #ffffff;
+      border: 1px solid rgba(255, 255, 255, 0.16);
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2), inset 0 1px 0 rgba(255, 255, 255, 0.18);
+      font-weight: 600;
+      transition: all 0.35s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    .btn-flat-accent:hover { 
+      opacity: 0.94;
+      box-shadow: 0 10px 24px rgba(0, 0, 0, 0.26);
+      transform: translateY(-2px) scale(1.015);
+    }
+    .btn-flat-accent:active { transform: translateY(0) scale(0.98); }
+
+    .btn-flat-danger {
+      background: rgba(185, 28, 28, 0.84);
+      backdrop-filter: blur(20px);
+      color: #ffffff;
+      border: 1px solid rgba(252, 165, 165, 0.3);
+      box-shadow: 0 6px 18px rgba(185, 28, 28, 0.26), inset 0 1px 0 rgba(255, 255, 255, 0.2);
+      font-weight: 600;
+      transition: all 0.35s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    .btn-flat-danger:hover { 
+      background: rgba(220, 38, 38, 0.94);
+      box-shadow: 0 10px 24px rgba(185, 28, 28, 0.38);
+      transform: translateY(-2px) scale(1.015);
+    }
+    .btn-flat-danger:active { transform: translateY(0) scale(0.98); }
+
+    .btn-flat-subtle {
+      background: rgba(148, 163, 184, 0.1);
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(148, 163, 184, 0.22);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12);
+      font-weight: 600;
+      transition: all 0.35s cubic-bezier(0.22, 1.35, 0.36, 1);
+    }
+    .btn-flat-subtle:hover { 
+      background: rgba(148, 163, 184, 0.2);
+      border-color: rgba(148, 163, 184, 0.36);
+      transform: translateY(-2px) scale(1.015);
+    }
+    .btn-flat-subtle:active { transform: translateY(0) scale(0.98); }
+
+    #wormPill {
+      transition: transform 0.48s cubic-bezier(0.22, 1.35, 0.36, 1), background 0.35s ease, box-shadow 0.35s ease;
+    }
+
+    @keyframes rainDrop {
+      0% { transform: translateY(-5px); opacity: 0; }
+      50% { opacity: 1; }
+      100% { transform: translateY(8px); opacity: 0; }
+    }
+    .rain-drop-1 { animation: rainDrop 0.8s linear infinite; }
+    .rain-drop-2 { animation: rainDrop 0.6s linear infinite 0.2s; }
+    .rain-drop-3 { animation: rainDrop 0.7s linear infinite 0.4s; }
+
+    @keyframes glassScaleIn {
+      0% { opacity: 0; transform: scale(0.96) translateY(14px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    
+    .animate-glass-in { animation: glassScaleIn 0.5s cubic-bezier(0.16, 1, 0.3, 1) forwards; }
+    
+    .modal-backdrop {
+      transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+      backdrop-filter: blur(36px) saturate(165%);
+      -webkit-backdrop-filter: blur(36px) saturate(165%);
+    }
+
+    /* ============================================================================
+       APPLE VISIONOS / iOS 26 TRUE OPTICAL LIQUID GLASS (HIGH-DPI CRISP EDGES)
+    ============================================================================ */
+    @keyframes liquidWaveFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    @keyframes liquidOrbDriftA {
+      0% { transform: translate(0px, 0px) scale(1) rotate(0deg); }
+      33% { transform: translate(110px, 60px) scale(1.25) rotate(12deg); }
+      66% { transform: translate(-40px, 120px) scale(0.94) rotate(-8deg); }
+      100% { transform: translate(30px, -40px) scale(1.12) rotate(4deg); }
+    }
+
+    @keyframes liquidOrbDriftB {
+      0% { transform: translate(0px, 0px) scale(1.05) rotate(0deg); }
+      33% { transform: translate(-120px, -70px) scale(1.3) rotate(-14deg); }
+      66% { transform: translate(50px, -100px) scale(0.9) rotate(10deg); }
+      100% { transform: translate(-25px, 45px) scale(1.15) rotate(-5deg); }
+    }
+
+    @keyframes liquidSheenSweep {
+      0% { transform: translateX(-180%) skewX(-24deg); opacity: 0; }
+      30% { opacity: 1; }
+      100% { transform: translateX(300%) skewX(-24deg); opacity: 0; }
+    }
+
+    @keyframes liquidRimPulse {
+      0%, 100% {
+        box-shadow:
+          0 24px 60px rgba(0, 0, 0, 0.55),
+          0 0 0 0.5px rgba(255, 255, 255, 0.26),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.42),
+          inset 0 -1px 0 0 rgba(56, 189, 248, 0.18),
+          inset 0 18px 36px -18px rgba(255, 255, 255, 0.14);
+      }
+      50% {
+        box-shadow:
+          0 28px 68px rgba(2, 132, 199, 0.28),
+          0 0 0 0.5px rgba(186, 230, 253, 0.36),
+          inset 0 1px 0 0 rgba(255, 255, 255, 0.55),
+          inset 0 -1px 0 0 rgba(56, 189, 248, 0.28),
+          inset 0 22px 42px -18px rgba(186, 230, 253, 0.2);
+      }
+    }
+
+    #liquidFluidBackdrop { display: none; }
+    html.liquid-glass #liquidFluidBackdrop { display: block; }
+    html.liquid-glass #liquidFluidBackdrop .liquid-orb-1 { animation: liquidOrbDriftA 16s ease-in-out infinite alternate; }
+    html.liquid-glass #liquidFluidBackdrop .liquid-orb-2 { animation: liquidOrbDriftB 20s ease-in-out infinite alternate; }
+    html.liquid-glass #liquidFluidBackdrop .liquid-orb-3 { animation: liquidOrbDriftA 24s ease-in-out infinite alternate-reverse; }
+
+    /* Liquid Glass Dark Mode — Optical Crystal Refraction */
+    html.liquid-glass.dark body {
+      background: linear-gradient(135deg, #030816 0%, #06162e 35%, #041d2c 68%, #020917 100%) !important;
+      background-size: 300% 300% !important;
+      animation: liquidWaveFlow 20s ease infinite !important;
+      color: #f8fafc !important;
+    }
+    html.liquid-glass.dark body::before {
+      width: 780px !important; height: 780px !important;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.44), rgba(59, 130, 246, 0.16)) !important;
+      filter: blur(135px) !important;
+    }
+    html.liquid-glass.dark body::after {
+      width: 820px !important; height: 820px !important;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.4), rgba(16, 185, 129, 0.14)) !important;
+      filter: blur(145px) !important;
+    }
+    html.liquid-glass.dark .canvas-panel {
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.085) 0%, rgba(186, 230, 253, 0.035) 50%, rgba(15, 23, 42, 0.22) 100%) !important;
+      backdrop-filter: blur(56px) saturate(210%) brightness(1.06) !important;
+      -webkit-backdrop-filter: blur(56px) saturate(210%) brightness(1.06) !important;
+      border: 1px solid rgba(255, 255, 255, 0.15) !important;
+      animation: liquidRimPulse 8s ease-in-out infinite;
+    }
+    html.liquid-glass.dark .canvas-card {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.09) 0%, rgba(56, 189, 248, 0.04) 55%, rgba(255, 255, 255, 0.025) 100%) !important;
+      backdrop-filter: blur(36px) saturate(195%) brightness(1.04) !important;
+      -webkit-backdrop-filter: blur(36px) saturate(195%) brightness(1.04) !important;
+      border: 1px solid rgba(255, 255, 255, 0.14) !important;
+      box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.36),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.34),
+        inset 0 -1px 0 0 rgba(56, 189, 248, 0.14),
+        inset 0 12px 24px -12px rgba(255, 255, 255, 0.12) !important;
+    }
+    html.liquid-glass.dark .canvas-card:hover {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.14) 0%, rgba(56, 189, 248, 0.09) 55%, rgba(255, 255, 255, 0.05) 100%) !important;
+      border-color: rgba(186, 230, 253, 0.38) !important;
+      transform: translateY(-3px) scale(1.006) !important;
+      box-shadow:
+        0 18px 42px rgba(2, 132, 199, 0.28),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.48),
+        inset 0 -1px 0 0 rgba(56, 189, 248, 0.24) !important;
+    }
+    html.liquid-glass.dark .canvas-input {
+      background: rgba(8, 18, 38, 0.36) !important;
+      backdrop-filter: blur(28px) saturate(185%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(185%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.16) !important;
+      color: #f8fafc !important;
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.24),
+        inset 0 2px 6px rgba(0, 0, 0, 0.28) !important;
+    }
+    html.liquid-glass.dark .canvas-input:focus {
+      background: rgba(8, 18, 38, 0.58) !important;
+      border-color: rgba(125, 211, 252, 0.68) !important;
+      box-shadow:
+        0 0 0 3px rgba(56, 189, 248, 0.18),
+        inset 0 1px 0 0 rgba(255, 255, 255, 0.38) !important;
+    }
+    html.liquid-glass.dark .canvas-input option {
+      background: #081229;
+      color: #f8fafc;
+    }
+
+    /* Liquid Glass Light Mode — Dewdrop Water Refraction */
+    html.liquid-glass:not(.dark) body {
+      background: linear-gradient(135deg, #d4f0ff 0%, #eaf8ff 35%, #d6eeff 70%, #c8e6ff 100%) !important;
+      background-size: 300% 300% !important;
+      animation: liquidWaveFlow 20s ease infinite !important;
+      color: #061826 !important;
+    }
+    html.liquid-glass:not(.dark) body::before {
+      width: 780px !important; height: 780px !important;
+      background: radial-gradient(circle, rgba(14, 165, 233, 0.38), rgba(56, 189, 248, 0.18)) !important;
+      filter: blur(130px) !important;
+    }
+    html.liquid-glass:not(.dark) body::after {
+      width: 820px !important; height: 820px !important;
+      background: radial-gradient(circle, rgba(6, 182, 212, 0.34), rgba(99, 102, 241, 0.14)) !important;
+      filter: blur(140px) !important;
+    }
+    html.liquid-glass:not(.dark) .canvas-panel {
+      background: linear-gradient(160deg, rgba(255, 255, 255, 0.62) 0%, rgba(224, 244, 255, 0.38) 50%, rgba(255, 255, 255, 0.5) 100%) !important;
+      backdrop-filter: blur(56px) saturate(215%) !important;
+      -webkit-backdrop-filter: blur(56px) saturate(215%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.85) !important;
+      box-shadow:
+        0 20px 50px rgba(14, 116, 144, 0.14),
+        0 0 0 0.5px rgba(14, 165, 233, 0.18),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1),
+        inset 0 -1px 0 0 rgba(14, 165, 233, 0.18),
+        inset 0 18px 36px -18px rgba(255, 255, 255, 0.85) !important;
+    }
+    html.liquid-glass:not(.dark) .canvas-card {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.55) 0%, rgba(224, 244, 255, 0.34) 100%) !important;
+      backdrop-filter: blur(36px) saturate(200%) !important;
+      -webkit-backdrop-filter: blur(36px) saturate(200%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.82) !important;
+      box-shadow:
+        0 10px 28px rgba(14, 116, 144, 0.1),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1),
+        inset 0 -1px 0 0 rgba(14, 165, 233, 0.12) !important;
+    }
+    html.liquid-glass:not(.dark) .canvas-card:hover {
+      background: linear-gradient(155deg, rgba(255, 255, 255, 0.78) 0%, rgba(204, 238, 255, 0.5) 100%) !important;
+      border-color: rgba(255, 255, 255, 1) !important;
+      transform: translateY(-3px) scale(1.006) !important;
+      box-shadow:
+        0 16px 36px rgba(2, 132, 199, 0.18),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
+    }
+    html.liquid-glass:not(.dark) .canvas-input {
+      background: rgba(255, 255, 255, 0.62) !important;
+      backdrop-filter: blur(28px) saturate(190%) !important;
+      -webkit-backdrop-filter: blur(28px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.9) !important;
+      color: #061826 !important;
+      box-shadow:
+        inset 0 1px 0 0 rgba(255, 255, 255, 1),
+        0 2px 8px rgba(14, 116, 144, 0.06) !important;
+    }
+    html.liquid-glass:not(.dark) .canvas-input:focus {
+      background: rgba(255, 255, 255, 0.88) !important;
+      border-color: rgba(2, 132, 199, 0.65) !important;
+      box-shadow:
+        0 0 0 3px rgba(14, 165, 233, 0.18),
+        inset 0 1px 0 0 rgba(255, 255, 255, 1) !important;
+    }
+
+    /* Specular Sheen Sweep on Cards */
+    html.liquid-glass .canvas-panel,
+    html.liquid-glass .canvas-card {
+      position: relative;
+      overflow: hidden;
+    }
+    html.liquid-glass header.canvas-panel {
+      position: sticky;
+      overflow: visible;
+    }
+    html.liquid-glass .canvas-card::after {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 45%;
+      height: 100%;
+      background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.28), transparent);
+      transform: translateX(-180%) skewX(-24deg);
+      pointer-events: none;
+    }
+    html.liquid-glass .canvas-card:hover::after {
+      animation: liquidSheenSweep 0.95s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    /* Glass Chart Stage — Optical Lens Depth */
+    .chart-glass-stage {
+      position: relative;
+      border-radius: 16px;
+      padding: 10px;
+      transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+    html.liquid-glass.dark .chart-glass-stage {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.04) 0%, rgba(14, 165, 233, 0.03) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16), inset 0 2px 12px rgba(0, 0, 0, 0.25);
+    }
+    html.liquid-glass:not(.dark) .chart-glass-stage {
+      background: linear-gradient(180deg, rgba(255, 255, 255, 0.45) 0%, rgba(224, 244, 255, 0.25) 100%);
+      border: 1px solid rgba(255, 255, 255, 0.78);
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.95), 0 4px 16px rgba(14, 116, 144, 0.06);
+    }
+
+    /* Elevated Optical Glass Buttons */
+    html.liquid-glass .btn-flat-primary {
+      background: linear-gradient(135deg, rgba(2, 132, 199, 0.82), rgba(14, 116, 144, 0.88)) !important;
+      backdrop-filter: blur(24px) saturate(200%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.32) !important;
+      box-shadow: 0 8px 22px rgba(2, 132, 199, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+    }
+    html.liquid-glass .btn-flat-accent {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.76), rgba(37, 99, 235, 0.82)) !important;
+      backdrop-filter: blur(24px) saturate(200%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.3) !important;
+      box-shadow: 0 8px 22px rgba(14, 165, 233, 0.28), inset 0 1px 0 rgba(255, 255, 255, 0.45) !important;
+      color: #ffffff !important;
+      font-weight: 600 !important;
+    }
+    html.liquid-glass .btn-flat-subtle {
+      background: rgba(255, 255, 255, 0.12) !important;
+      backdrop-filter: blur(24px) saturate(190%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.22) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3) !important;
+      font-weight: 600 !important;
+    }
+    html.liquid-glass:not(.dark) .btn-flat-subtle {
+      background: rgba(255, 255, 255, 0.55) !important;
+      border: 1px solid rgba(255, 255, 255, 0.88) !important;
+      box-shadow: inset 0 1px 0 rgba(255, 255, 255, 1), 0 2px 8px rgba(14, 116, 144, 0.08) !important;
+    }
+    html.liquid-glass .btn-flat-danger {
+      background: linear-gradient(135deg, rgba(225, 29, 72, 0.84), rgba(190, 18, 60, 0.9)) !important;
+      backdrop-filter: blur(24px) saturate(200%) !important;
+      border: 1px solid rgba(255, 255, 255, 0.28) !important;
+      box-shadow: 0 8px 22px rgba(225, 29, 72, 0.32), inset 0 1px 0 rgba(255, 255, 255, 0.38) !important;
+      font-weight: 600 !important;
+    }
+    html.liquid-glass #wormPill {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.88), rgba(2, 132, 199, 0.94)) !important;
+      border: 1px solid rgba(255, 255, 255, 0.38) !important;
+      box-shadow: 0 4px 16px rgba(14, 165, 233, 0.42), inset 0 1px 0 rgba(255, 255, 255, 0.5) !important;
+    }
+    html.liquid-glass table tbody tr {
+      transition: background-color 0.25s ease, transform 0.25s ease;
+    }
+    html.liquid-glass table tbody tr:hover {
+      background: rgba(56, 189, 248, 0.1) !important;
+    }
+    .liquid-toggle-active {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.86), rgba(6, 182, 212, 0.92)) !important;
+      color: #ffffff !important;
+      border: 1px solid rgba(255, 255, 255, 0.42) !important;
+      box-shadow: 0 0 20px rgba(14, 165, 233, 0.44), inset 0 1px 0 rgba(255, 255, 255, 0.52) !important;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col selection:bg-cyan-500 selection:text-white">
+
+  <!-- AMBIENT FLUID ORBS -->
+  <div id="liquidFluidBackdrop" class="fixed inset-0 pointer-events-none z-0 overflow-hidden">
+    <div class="liquid-orb-1 absolute top-1/4 left-1/4 w-[520px] h-[520px] rounded-full bg-cyan-400/28 dark:bg-cyan-500/24 blur-[130px]"></div>
+    <div class="liquid-orb-2 absolute bottom-1/4 right-1/4 w-[580px] h-[580px] rounded-full bg-sky-400/24 dark:bg-blue-500/24 blur-[140px]"></div>
+    <div class="liquid-orb-3 absolute top-1/2 right-1/3 w-[440px] h-[440px] rounded-full bg-teal-300/24 dark:bg-teal-400/20 blur-[120px]"></div>
+  </div>
+
+  <!-- TOP BAR & STATUS -->
+  <header class="canvas-panel sticky top-0 z-40 border-b px-6 py-3 flex items-center justify-between">
+    <div class="flex items-center gap-3">
+      <div class="w-9 h-9 bg-slate-800 dark:bg-stone-700/80 backdrop-blur-md border border-white/15 flex items-center justify-center text-white font-bold text-sm tracking-wider shadow-md rounded-xl">KFC</div>
+      <div>
+        <h1 class="font-bold text-xs tracking-wide uppercase">Kooddoo Fisheries Complex</h1>
+        <p class="text-[10px] text-slate-500 dark:text-stone-400 font-mono font-semibold tracking-widest uppercase">IT TICKETING SYSTEM</p>
+      </div>
+    </div>
+
+    <!-- Clock & Real Weather Widget -->
+    <div class="hidden md:flex items-center gap-4 px-3.5 py-1.5 canvas-card text-[11px] font-mono">
+      <div id="maldivesWeatherWidget" class="flex items-center gap-2">
+        <span class="opacity-70 animate-pulse">Loading weather...</span>
+      </div>
+      <div class="h-4 w-[1px] bg-slate-400/30 dark:bg-stone-500/30"></div>
+      <div>
+        <span id="maldivesClock" class="font-semibold tracking-wider">--:--:-- MVT</span>
+      </div>
+    </div>
+
+    <div class="flex items-center gap-3">
+      <!-- Logged-in Username & Role Badge -->
+      <div id="loggedInUserBadge" class="hidden px-3 py-1.5 canvas-card text-xs font-mono font-semibold tracking-wider flex items-center gap-2">
+        <i data-lucide="user-check" class="w-3.5 h-3.5 text-cyan-500"></i>
+        <span id="loggedInUserText">--</span>
+      </div>
+
+      <div class="hidden sm:flex items-center gap-2 px-3 py-1.5 canvas-card text-[11px] font-mono">
+        <span id="connectionStatusDot" class="w-2 h-2 bg-emerald-500 rounded-full animate-pulse"></span>
+        <span id="connectionStatusText" class="opacity-90 font-semibold tracking-wider">ONLINE (SYNCED)</span>
+      </div>
+
+      <!-- LIQUID GLASS EFFECT TOGGLE -->
+      <button id="liquidGlassToggleBtn" onclick="toggleLiquidGlass()" class="px-3 py-1.5 btn-flat-subtle text-xs font-semibold flex items-center gap-2" title="Switch between Normal and Fluid Glass Effect">
+        <i data-lucide="droplets" id="liquidGlassIcon" class="w-4 h-4 text-cyan-500"></i>
+        <span id="liquidGlassLabel">LIQUID GLASS</span>
+      </button>
+
+      <button onclick="toggleTheme()" class="px-3 py-1.5 btn-flat-subtle text-xs font-semibold flex items-center gap-2">
+        <i data-lucide="sun" id="themeIcon" class="w-4 h-4"></i>
+        <span id="themeLabel">LIGHT</span>
+      </button>
+
+      <button id="navLogoutBtn" onclick="confirmLogout()" class="hidden px-3.5 py-1.5 btn-flat-danger text-xs tracking-wider uppercase flex items-center gap-1.5">
+        <i data-lucide="log-out" class="w-3.5 h-3.5"></i> LOGOUT
+      </button>
+    </div>
+  </header>
+
+  <!-- NOTIFICATION TOAST LAYER -->
+  <div id="toastContainer" class="fixed top-16 right-5 z-50 flex flex-col gap-2 pointer-events-none"></div>
+
+  <!-- MAIN APP CONTAINER -->
+  <div id="app" class="flex-1 flex flex-col relative z-10">
+
+    <!-- VIEW 1: AUTHENTICATION / LOGIN VIEW -->
+    <div id="loginView" class="flex-1 flex items-center justify-center p-4">
+      <div class="w-full max-w-md space-y-6 animate-glass-in">
+        
+        <div class="text-center">
+          <div class="inline-flex items-center justify-center w-16 h-16 bg-slate-800 dark:bg-stone-800/80 backdrop-blur-md text-white border border-white/15 mb-3 shadow-2xl rounded-2xl">
+            <i data-lucide="server" class="w-8 h-8"></i>
+          </div>
+          <h2 class="text-xl font-bold tracking-wide uppercase">Kooddoo IT Service Desk</h2>
+          <p class="text-xs opacity-70 font-mono mt-1">UNIFIED ACCESS PORTAL</p>
+        </div>
+
+        <div class="canvas-panel p-6 space-y-4">
+          <div>
+            <h3 class="text-xs font-bold uppercase tracking-widest">SYSTEM AUTHENTICATION</h3>
+            <p class="text-xs opacity-70 mt-0.5">Enter Username or 6-Digit Employee ID to sign in.</p>
+          </div>
+
+          <form id="loginForm" onsubmit="handleLogin(event)" class="space-y-4">
+            <div>
+              <label class="block text-xs font-semibold mb-1">USERNAME OR 6-DIGIT EMPLOYEE ID</label>
+              <input type="text" id="loginIdentifier" required class="w-full canvas-input p-3 text-xs font-mono" placeholder="e.g. Shahi or 100001">
+            </div>
+
+            <div>
+              <label class="block text-xs font-semibold mb-1">PASSWORD</label>
+              <input type="password" id="loginPassword" required class="w-full canvas-input p-3 text-xs" placeholder="••••••••">
+            </div>
+
+            <div class="p-3 canvas-card text-[11px] space-y-1 font-mono">
+              <span class="font-semibold tracking-wider block">DEFAULT DEMO CREDENTIALS:</span>
+              <p>Staff: <span class="font-bold">100001</span> (Pass: <span class="font-bold">123</span>)</p>
+              <p>Admin: <span class="font-bold">000001</span> (Pass: <span class="font-bold">Admin@123</span>)</p>
+              <p>Super Admin: <span class="font-bold">superadmin</span> (Pass: <span class="font-bold">123</span>)</p>
+            </div>
+
+            <button type="submit" class="w-full py-3.5 btn-flat-primary text-xs tracking-wider uppercase flex items-center justify-center gap-2">
+              <i data-lucide="shield-check" class="w-4 h-4"></i> AUTHENTICATE
+            </button>
+          </form>
+        </div>
+
+      </div>
+    </div>
+
+
+    <!-- VIEW 2: STAFF / USER PORTAL VIEW (OPTIMIZED FULL-VIEWPORT WORKSPACE) -->
+    <div id="userPortal" class="hidden flex-1 flex flex-col">
+      <main class="flex-1 w-full px-4 md:px-6 py-4 md:py-5 grid grid-cols-1 lg:grid-cols-12 gap-5 items-stretch">
+        
+        <!-- Ticket Form -->
+        <div class="lg:col-span-5 canvas-panel p-6 flex flex-col justify-between space-y-4 animate-glass-in">
+          <div class="space-y-4 flex-1 flex flex-col">
+            <div class="border-b pb-3.5 flex items-center justify-between border-slate-200 dark:border-stone-800/60">
+              <div>
+                <h2 class="font-bold text-sm uppercase tracking-wider">SUBMIT IT REQUEST</h2>
+                <p class="text-xs opacity-70">Direct Technician Dispatch</p>
+              </div>
+              <div class="w-9 h-9 canvas-card flex items-center justify-center">
+                <i data-lucide="ticket-plus" class="w-4 h-4 opacity-85"></i>
+              </div>
+            </div>
+
+            <form id="createTicketForm" onsubmit="promptCreateTicket(event)" class="space-y-4 flex-1 flex flex-col justify-between">
+              <div class="space-y-4 flex-1 flex flex-col">
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5">EMPLOYEE NAME *</label>
+                    <input type="text" id="ticketEmployee" required class="w-full canvas-input p-3 text-xs" placeholder="Full Name">
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5">EMPLOYEE ID (6 DIGITS) *</label>
+                    <input type="text" id="ticketEmpId" required maxlength="6" pattern="[0-9]{6}" class="w-full canvas-input p-3 text-xs font-mono" placeholder="6-digit ID (e.g. 100001)">
+                  </div>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5">ISSUE CATEGORY *</label>
+                    <select id="ticketIssueType" onchange="autoSelectSeverity()" required class="w-full canvas-input p-3 text-xs">
+                      <option value="" disabled selected>Select Specific Issue Category...</option>
+                      <option value="NETWORK DOWN">NETWORK DOWN</option>
+                      <option value="CAMERA DOWN">CAMERA DOWN</option>
+                      <option value="WIFI DOWN">WIFI DOWN</option>
+                      <option value="PC PASSWORD LOCK">PC PASSWORD LOCK</option>
+                      <option value="MAIL (OUTLOOK) PASSWORD ISSUE">MAIL (OUTLOOK) PASSWORD ISSUE</option>
+                      <option value="HR METRICS APP ISSUE">HR METRICS APP ISSUE</option>
+                      <option value="PC INTERNET SLOW">PC INTERNET SLOW</option>
+                      <option value="WIFI SLOW">WIFI SLOW</option>
+                      <option value="PRINTER NOT WORKING">PRINTER NOT WORKING</option>
+                      <option value="SCANNER NOT WORKING">SCANNER NOT WORKING</option>
+                      <option value="WIFI PASSWORD">WIFI PASSWORD</option>
+                      <option value="PC REQUEST">PC REQUEST</option>
+                      <option value="MOBILE REQUEST">MOBILE REQUEST</option>
+                      <option value="DEVICE REQUEST">DEVICE REQUEST</option>
+                      <option value="OTHER ISSUE">OTHER ISSUE</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label class="block text-xs font-semibold mb-1.5 flex items-center justify-between">
+                      <span>SEVERITY LEVEL *</span>
+                      <span class="text-[10px] opacity-60 font-mono font-normal">(Auto-Selected)</span>
+                    </label>
+                    <select id="ticketSeverity" required class="w-full canvas-input p-3 text-xs font-semibold">
+                      <option value="Low">Low - Minor Request / Query</option>
+                      <option value="Medium">Medium - Normal Work Impact</option>
+                      <option value="Critical">Critical - System Outage / Lockout</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="flex-1 flex flex-col">
+                  <label class="block text-xs font-semibold mb-1.5">DETAILED DESCRIPTION *</label>
+                  <textarea id="ticketDescription" rows="5" required class="w-full flex-1 min-h-[140px] canvas-input p-3 text-xs resize-none smooth-scroll-area" placeholder="Provide details, location, or error codes..."></textarea>
+                </div>
+              </div>
+
+              <div class="pt-2 space-y-3">
+                <div class="p-3 canvas-card flex items-center justify-between text-[11px] font-mono opacity-80">
+                  <span class="flex items-center gap-1.5"><i data-lucide="zap" class="w-3.5 h-3.5 text-amber-400"></i> LIVE TELEGRAM & ADMIN DISPATCH</span>
+                  <span class="text-emerald-500 font-semibold">READY</span>
+                </div>
+
+                <button type="submit" id="dispatchBtn" class="w-full py-3.5 btn-flat-primary text-xs tracking-wider uppercase flex items-center justify-center gap-2">
+                  <i data-lucide="send" class="w-4 h-4"></i> DISPATCH TICKET
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Ticket List & Active Tracker -->
+        <div class="lg:col-span-7 flex flex-col animate-glass-in">
+          <div class="canvas-panel p-6 flex-1 flex flex-col space-y-4">
+            <div class="flex flex-col xl:flex-row xl:items-center justify-between gap-3 border-b pb-3.5 border-slate-200 dark:border-stone-800/60">
+              <div>
+                <h2 class="font-bold text-sm uppercase tracking-wider">MY SUBMITTED TICKETS</h2>
+                <p class="text-xs opacity-70">Real-Time Status & Work Notes</p>
+              </div>
+
+              <!-- Controls: Search & Sort & Reset -->
+              <div class="flex flex-wrap items-center gap-2">
+                <div class="relative">
+                  <input type="text" id="userTicketSearch" oninput="renderUserTickets()" placeholder="Search tickets..." class="canvas-input px-3 py-1.5 text-xs w-40 sm:w-52 font-mono">
+                </div>
+                <select id="userTicketSort" onchange="renderUserTickets()" class="canvas-input px-3 py-1.5 text-xs font-semibold">
+                  <option value="newest">Newest</option>
+                  <option value="oldest">Oldest</option>
+                  <option value="severity">Severity</option>
+                  <option value="status">Status</option>
+                </select>
+                <button onclick="confirmResetUserView()" class="px-3 py-1.5 btn-flat-subtle text-xs flex items-center gap-1" title="Reset View">
+                  <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+                </button>
+              </div>
+            </div>
+
+            <!-- Compact Live Ticket Summary Strip -->
+            <div id="userTicketStatsBar" class="grid grid-cols-4 gap-2.5 text-center font-mono">
+              <div class="canvas-card py-2 px-3 flex items-center justify-between">
+                <span class="text-[10px] opacity-65 uppercase">Total</span>
+                <span id="userStatTotal" class="text-xs font-bold">0</span>
+              </div>
+              <div class="canvas-card py-2 px-3 flex items-center justify-between">
+                <span class="text-[10px] opacity-65 uppercase">Open</span>
+                <span id="userStatOpen" class="text-xs font-bold text-amber-400">0</span>
+              </div>
+              <div class="canvas-card py-2 px-3 flex items-center justify-between">
+                <span class="text-[10px] opacity-65 uppercase">Active</span>
+                <span id="userStatProgress" class="text-xs font-bold text-cyan-400">0</span>
+              </div>
+              <div class="canvas-card py-2 px-3 flex items-center justify-between">
+                <span class="text-[10px] opacity-65 uppercase">Closed</span>
+                <span id="userStatClosed" class="text-xs font-bold text-emerald-400">0</span>
+              </div>
+            </div>
+
+            <!-- Smooth Invisible Scrollable Ticket List -->
+            <div id="userTicketsList" class="space-y-3 flex-1 max-h-[calc(100vh-235px)] min-h-[420px] overflow-y-auto smooth-scroll-area py-1">
+              <!-- Dynamic Tickets Rendered Here -->
+            </div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+
+    <!-- VIEW 3: ADMIN / SUPER ADMIN COMMAND CENTER DASHBOARD -->
+    <div id="adminPortal" class="hidden flex-1 flex flex-col">
+      <main class="flex-1 max-w-7xl w-full mx-auto p-4 md:p-6 space-y-6">
+        
+        <!-- Live Admin Alert Notifications Banner (Auto-clears in exactly 5 seconds) -->
+        <div id="adminAlertBannerContainer" class="space-y-2"></div>
+
+        <div class="canvas-panel p-4 flex flex-wrap items-center justify-between gap-3 animate-glass-in">
+          <div>
+            <h2 id="adminPortalTitle" class="font-bold text-sm uppercase tracking-wider">ADMINISTRATOR OPERATIONS CENTER</h2>
+            <p id="adminPortalSubtitle" class="text-xs opacity-70">Master Ticket Dispatch, Passwords & User Management</p>
+          </div>
+
+          <div class="flex flex-wrap items-center gap-3">
+            <!-- Timeframe Toggle Switch -->
+            <div id="wormToggleContainer" class="relative flex items-center canvas-card p-1 text-xs font-semibold font-mono w-80 sm:w-88">
+              <div id="wormPill" class="absolute top-1 bottom-1 left-1 w-[calc(25%-2px)] bg-slate-900 dark:bg-stone-200 text-white dark:text-stone-900 shadow-md pointer-events-none rounded-xl"></div>
+              <button id="toggleDay" onclick="setTimeframeMode('day')" class="relative z-10 flex-1 px-2 py-1.5 text-center transition-colors duration-300">DAY</button>
+              <button id="toggleMonth" onclick="setTimeframeMode('month')" class="relative z-10 flex-1 px-2 py-1.5 text-center transition-colors duration-300">MONTH</button>
+              <button id="toggleYear" onclick="setTimeframeMode('year')" class="relative z-10 flex-1 px-2 py-1.5 text-center transition-colors duration-300">YEAR</button>
+              <button id="toggleDate" onclick="setTimeframeMode('date')" class="relative z-10 flex-1 px-2 py-1.5 text-center transition-colors duration-300">DATE</button>
+            </div>
+
+            <!-- Specific Date Picker -->
+            <div id="specificDatePickerWrapper" class="hidden items-center gap-1.5">
+              <input type="date" id="dashboardSpecificDate" onchange="renderAdminDashboard()" class="canvas-input px-2.5 py-1.5 text-xs font-mono font-semibold" title="Select Specific Date">
+            </div>
+
+            <button onclick="openCreateUserModal()" class="px-3.5 py-2 btn-flat-accent text-xs tracking-wider uppercase flex items-center gap-1.5">
+              <i data-lucide="user-plus" class="w-3.5 h-3.5"></i> CREATE USER
+            </button>
+            <button onclick="openPasswordResetModal()" class="px-3.5 py-2 btn-flat-subtle text-xs tracking-wider uppercase flex items-center gap-1.5">
+              <i data-lucide="key-round" class="w-3.5 h-3.5"></i> RESET PASSWORD
+            </button>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 md:grid-cols-5 gap-3 animate-glass-in">
+          <div class="canvas-panel p-4">
+            <p class="text-[10px] font-semibold opacity-70 uppercase tracking-wider">Total Queue</p>
+            <div class="text-2xl font-bold mt-1 font-mono" id="metricTotal">0</div>
+          </div>
+          <div class="canvas-panel p-4 border-l-4 border-l-slate-400 dark:border-l-stone-500">
+            <p class="text-[10px] font-semibold opacity-70 uppercase tracking-wider">Open</p>
+            <div class="text-2xl font-bold mt-1 font-mono" id="metricOpen">0</div>
+          </div>
+          <div class="canvas-panel p-4 border-l-4 border-l-amber-500">
+            <p class="text-[10px] font-semibold text-amber-600 dark:text-amber-500 uppercase tracking-wider">In Progress</p>
+            <div class="text-2xl font-bold mt-1 font-mono text-amber-600 dark:text-amber-500" id="metricProgress">0</div>
+          </div>
+          <div class="canvas-panel p-4 border-l-4 border-l-emerald-600">
+            <p class="text-[10px] font-semibold text-emerald-600 dark:text-emerald-500 uppercase tracking-wider">Resolved</p>
+            <div class="text-2xl font-bold mt-1 font-mono text-emerald-600 dark:text-emerald-500" id="metricResolved">0</div>
+          </div>
+          <div class="canvas-panel p-4 border-l-4 border-l-rose-600 col-span-2 md:col-span-1">
+            <p class="text-[10px] font-semibold text-rose-600 dark:text-rose-500 uppercase tracking-wider">Critical Alerts</p>
+            <div class="text-2xl font-bold mt-1 font-mono text-rose-600 dark:text-rose-500" id="metricCritical">0</div>
+          </div>
+        </div>
+
+        <!-- Reports & Queue Cleanup Bar -->
+        <div class="canvas-panel p-4 flex flex-wrap items-center justify-between gap-3 animate-glass-in">
+          <div class="flex items-center gap-2">
+            <i data-lucide="download-cloud" class="w-4 h-4 opacity-80"></i>
+            <span class="text-xs font-semibold uppercase tracking-wider">REPORTS & QUEUE CLEANUP:</span>
+          </div>
+          <div class="flex flex-wrap items-center gap-2.5">
+            <select id="cleanupModeSelect" class="canvas-input px-2.5 py-1.5 text-xs font-semibold uppercase">
+              <option value="day">By Date (Day)</option>
+              <option value="month">By Month</option>
+              <option value="year">By Year</option>
+            </select>
+            <input type="date" id="actionTargetDate" class="canvas-input px-3 py-1.5 text-xs font-mono">
+            <button onclick="executeActionExport()" class="px-3.5 py-1.5 btn-flat-subtle text-xs font-semibold uppercase flex items-center gap-1.5">
+              <i data-lucide="file-spreadsheet" class="w-3.5 h-3.5"></i> EXPORT REPORT
+            </button>
+            <button onclick="executeActionClear()" class="px-3.5 py-1.5 btn-flat-danger text-xs font-semibold uppercase flex items-center gap-1.5">
+              <i data-lucide="trash-2" class="w-3.5 h-3.5"></i> CLEAR TICKETS
+            </button>
+          </div>
+        </div>
+
+        <!-- ACCOUNT MANAGEMENT DIRECTORY -->
+        <div id="superAdminAccountsSection" class="canvas-panel p-6 space-y-4 animate-glass-in hidden border border-rose-500/30">
+          <div class="flex items-center justify-between border-b pb-3 border-slate-200 dark:border-stone-800/60">
+            <div>
+              <h3 id="accountMgmtTitle" class="font-bold text-sm uppercase tracking-wider text-rose-500 flex items-center gap-2">
+                <i data-lucide="shield-alert" class="w-4 h-4"></i> SUPER ADMIN ACCOUNT MANAGEMENT
+              </h3>
+              <p id="accountMgmtSubtitle" class="text-xs opacity-70">Manage System Accounts & Delete Super Admin / Admin / Staff Accounts</p>
+            </div>
+            <span id="accountMgmtBadge" class="px-2.5 py-1 bg-rose-950/60 text-rose-300 font-mono text-[10px] font-semibold border border-rose-700/60 rounded-md">RESTRICTED ACCESS</span>
+          </div>
+
+          <div class="overflow-x-auto max-h-72 overflow-y-auto smooth-scroll-area">
+            <table class="w-full text-left text-xs">
+              <thead class="font-bold uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-stone-800/60">
+                <tr>
+                  <th class="p-3">USERNAME</th>
+                  <th class="p-3 font-mono">EMP ID</th>
+                  <th class="p-3">ROLE</th>
+                  <th class="p-3 font-mono">PASSWORD</th>
+                  <th class="p-3 text-right">ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="superAdminAccountsTbody" class="divide-y divide-slate-200/60 dark:divide-stone-800/40">
+                <!-- Rendered dynamically -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 animate-glass-in">
+          <div class="canvas-panel p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-xs uppercase tracking-wider">SEVERITY BREAKDOWN</h3>
+              <span class="text-[10px] font-mono opacity-75 px-2.5 py-0.5 canvas-card">LIVE RATIO</span>
+            </div>
+            <div class="chart-glass-stage relative h-52 flex items-center justify-center">
+              <canvas id="severityChart"></canvas>
+            </div>
+          </div>
+
+          <div class="md:col-span-2 canvas-panel p-5 space-y-3">
+            <div class="flex items-center justify-between">
+              <h3 class="font-bold text-xs uppercase tracking-wider">CATEGORY DISTRIBUTION (TOTAL VS COMPLETED)</h3>
+              <div class="flex items-center gap-3 text-[10px] font-semibold font-mono">
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-cyan-400 shadow-sm shadow-cyan-400/50 inline-block"></span> TOTAL</span>
+                <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-emerald-400 shadow-sm shadow-emerald-400/50 inline-block"></span> COMPLETED</span>
+              </div>
+            </div>
+            <div class="chart-glass-stage relative h-52">
+              <canvas id="issueTypeChart"></canvas>
+            </div>
+          </div>
+        </div>
+
+        <div class="canvas-panel p-6 space-y-4 animate-glass-in">
+          <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+            <div>
+              <h3 class="font-bold text-sm uppercase tracking-wider">MASTER IT QUEUE DISPATCH</h3>
+              <p class="text-xs opacity-70">Assign Technicians & Review User Replies</p>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+              <input type="text" id="adminTicketSearch" oninput="renderAdminQueue()" placeholder="Search queue..." class="canvas-input px-2.5 py-1.5 text-xs w-36 sm:w-44 font-mono">
+              
+              <select id="adminTimeSort" onchange="renderAdminQueue()" class="canvas-input px-2.5 py-1.5 text-xs font-semibold">
+                <option value="newest">Newest First</option>
+                <option value="oldest">Oldest First</option>
+              </select>
+
+              <select id="filterSeverity" onchange="renderAdminQueue()" class="canvas-input px-3 py-1.5 text-xs font-semibold">
+                <option value="ALL">All Severities</option>
+                <option value="Low">Low</option>
+                <option value="Medium">Medium</option>
+                <option value="Critical">Critical</option>
+              </select>
+
+              <select id="filterStatus" onchange="renderAdminQueue()" class="canvas-input px-3 py-1.5 text-xs font-semibold">
+                <option value="ALL">All Statuses</option>
+                <option value="Open">Open</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Resolved">Resolved</option>
+                <option value="Closed">Closed</option>
+              </select>
+
+              <button onclick="confirmResetAdminView()" class="px-3 py-1.5 btn-flat-subtle text-xs" title="Reset View">
+                <i data-lucide="rotate-cw" class="w-3.5 h-3.5"></i>
+              </button>
+            </div>
+          </div>
+
+          <div class="overflow-x-auto max-h-[540px] overflow-y-auto smooth-scroll-area">
+            <table class="w-full text-left text-xs">
+              <thead class="font-bold uppercase text-[10px] tracking-wider border-b border-slate-200 dark:border-stone-800/60">
+                <tr>
+                  <th class="p-3 font-mono">TICKET ID</th>
+                  <th class="p-3">EMPLOYEE</th>
+                  <th class="p-3">EMP ID</th>
+                  <th class="p-3">ISSUE CATEGORY</th>
+                  <th class="p-3">USER REPLY & TIMESTAMP</th>
+                  <th class="p-3 font-mono">CREATED AT</th>
+                  <th class="p-3">SEVERITY</th>
+                  <th class="p-3">STATUS</th>
+                  <th class="p-3 text-right">ACTION</th>
+                </tr>
+              </thead>
+              <tbody id="adminQueueTbody" class="divide-y divide-slate-200/60 dark:divide-stone-800/40">
+                <!-- Queue Rows Rendered Here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </main>
+    </div>
+
+  </div>
+
+
+  <!-- MODALS SECTION -->
+  <!-- Modal 1: Ticket Detail & Resolution -->
+  <div id="ticketDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-lg p-6 space-y-4 relative animate-glass-in shadow-2xl max-h-[90vh] overflow-y-auto smooth-scroll-area">
+      <button onclick="closeTicketModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono font-semibold">X</button>
+
+      <div class="flex items-center gap-2">
+        <span id="modalTicketId" class="px-2.5 py-1 bg-slate-200 dark:bg-stone-800/60 font-mono text-xs font-semibold border border-slate-300 dark:border-stone-600/50 inline-flex items-center justify-center min-h-[26px] rounded-lg">#T-1001</span>
+        <div id="modalTicketSeverity" class="inline-flex items-center justify-center"></div>
+      </div>
+
+      <div>
+        <h3 id="modalIssueType" class="font-bold text-base">PC PASSWORD LOCK</h3>
+        <p class="text-xs opacity-80 mt-1">User: <span id="modalUser" class="font-semibold">Shahi</span> | Employee ID: <span id="modalEmpId" class="font-mono font-semibold">100001</span></p>
+      </div>
+
+      <div class="p-3 canvas-card text-xs">
+        <p class="font-semibold uppercase text-[10px] opacity-70 mb-1">Issue Description:</p>
+        <p id="modalDescription"></p>
+      </div>
+
+      <div id="modalUserReplyContainer" class="p-3 canvas-panel border-l-2 border-l-emerald-600 text-xs space-y-1.5 hidden">
+        <div class="flex items-center justify-between gap-2">
+          <span class="font-semibold text-emerald-600 dark:text-emerald-500 text-[10px] uppercase">Latest User Feedback / Reply:</span>
+          <span id="modalUserReplyTime" class="text-[10px] font-mono opacity-75 text-emerald-600 dark:text-emerald-400"></span>
+        </div>
+        <p id="modalUserReplyText" class="opacity-90 font-medium"></p>
+      </div>
+
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold mb-1">UPDATE STATUS</label>
+          <select id="modalStatusSelect" class="w-full canvas-input p-2.5 text-xs font-semibold">
+            <option value="Open">Open</option>
+            <option value="In Progress">In Progress</option>
+            <option value="Resolved">Resolved</option>
+            <option value="Closed">Closed</option>
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">ASSIGNED TECHNICIAN</label>
+          <select id="modalTechAssigneeSelect" class="w-full canvas-input p-2.5 text-xs font-semibold hidden">
+            <option value="Unassigned">Unassigned</option>
+          </select>
+          <input type="text" id="modalTechAssignee" class="w-full canvas-input p-2.5 text-xs font-semibold" placeholder="Technician Name">
+        </div>
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold mb-1">TECHNICIAN RESOLUTION NOTES & DIAGNOSTICS</label>
+        <textarea id="modalResolutionNotes" rows="3" class="w-full canvas-input p-2.5 text-xs smooth-scroll-area" placeholder="Provide diagnostic findings, reset keys, or action details..."></textarea>
+      </div>
+
+      <div class="flex justify-end gap-2 pt-2">
+        <button onclick="closeTicketModal()" class="px-4 py-2 btn-flat-subtle text-xs">CANCEL</button>
+        <button onclick="saveTicketUpdates()" class="px-5 py-2 btn-flat-primary text-xs">SAVE UPDATES</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Modal 2: Password Reset -->
+  <div id="passwordResetModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl">
+      <button onclick="closePasswordResetModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono">X</button>
+      <h3 class="font-bold text-sm uppercase tracking-wider">IT PASSWORD RESET TOOL</h3>
+
+      <form onsubmit="handlePasswordResetTool(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1">SELECT USER ACCOUNT</label>
+          <select id="resetTargetUser" class="w-full canvas-input p-2.5 text-xs font-mono">
+          </select>
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">NEW ASSIGNED PASSWORD</label>
+          <input type="text" id="resetNewPassword" required class="w-full canvas-input p-2.5 text-xs font-mono" placeholder="Enter new password...">
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <button type="button" onclick="switchModal('passwordResetModal', openCreateUserModal)" class="text-xs text-slate-500 dark:text-stone-400 hover:underline">Need Create User?</button>
+          <div class="flex gap-2">
+            <button type="button" onclick="closePasswordResetModal()" class="px-4 py-2 btn-flat-subtle text-xs">CANCEL</button>
+            <button type="submit" class="px-5 py-2 btn-flat-primary text-xs">APPLY PASSWORD</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 3: Create User Account -->
+  <div id="createUserModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl">
+      <button onclick="closeCreateUserModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono">X</button>
+      <h3 class="font-bold text-sm uppercase tracking-wider">REGISTER NEW ACCOUNT</h3>
+
+      <form onsubmit="handleCreateUser(event)" class="space-y-4">
+        <div>
+          <label class="block text-xs font-semibold mb-1">USERNAME *</label>
+          <input type="text" id="newUsername" required class="w-full canvas-input p-2.5 text-xs" placeholder="e.g. JohnDoe">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">EMPLOYEE ID (6 DIGITS) *</label>
+          <input type="text" id="newEmployeeId" required maxlength="6" pattern="[0-9]{6}" class="w-full canvas-input p-2.5 text-xs font-mono" placeholder="e.g. 100234">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">ASSIGN INITIAL PASSWORD *</label>
+          <input type="text" id="newUserPassword" required class="w-full canvas-input p-2.5 text-xs font-mono" placeholder="Password...">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold mb-1">SYSTEM ROLE *</label>
+          <select id="newUserRole" class="w-full canvas-input p-2.5 text-xs">
+            <option value="user">Staff / User</option>
+            <option value="admin">Administrator</option>
+            <option value="superadmin">Super Administrator</option>
+          </select>
+        </div>
+        <div class="flex justify-between items-center pt-2">
+          <button type="button" onclick="switchModal('createUserModal', openPasswordResetModal)" class="text-xs text-slate-500 dark:text-stone-400 hover:underline">Need Reset Password?</button>
+          <div class="flex gap-2">
+            <button type="button" onclick="closeCreateUserModal()" class="px-4 py-2 btn-flat-subtle text-xs">CANCEL</button>
+            <button type="submit" class="px-5 py-2 btn-flat-accent text-xs">REGISTER ACCOUNT</button>
+          </div>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Modal 4: Generic Confirmation Popup Modal -->
+  <div id="confirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-sm p-6 space-y-4 relative animate-glass-in text-center shadow-2xl">
+      <div id="confirmIconContainer" class="inline-flex items-center justify-center w-12 h-12 bg-slate-800 dark:bg-stone-800/80 backdrop-blur-md text-white border border-white/15 mb-1 rounded-2xl">
+        <i data-lucide="help-circle" class="w-6 h-6"></i>
+      </div>
+      <h3 id="confirmTitle" class="font-bold text-sm uppercase tracking-wider">CONFIRM ACTION</h3>
+      <p id="confirmMessage" class="text-xs opacity-90"></p>
+      <div class="flex justify-center gap-2 pt-3">
+        <button id="confirmCancelBtn" onclick="closeConfirmModal()" class="px-4 py-2 btn-flat-subtle text-xs">CANCEL</button>
+        <button id="confirmOkBtn" class="px-5 py-2 btn-flat-primary text-xs">OK / CONFIRM</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- FIREBASE SDK & APPLICATION ENGINE -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyCqOQv9xVEm8qbHHugixm2rsF0g91Zo1dk",
+      authDomain: "kfc-it-ticketing-system.firebaseapp.com",
+      projectId: "kfc-it-ticketing-system",
+      storageBucket: "kfc-it-ticketing-system.firebasestorage.app",
+      messagingSenderId: "347910416396",
+      appId: "1:347910416396:web:3b9aa2ab5c2100f5a5e629",
+      measurementId: "G-5042NKLPXH"
+    };
+
+    const appId = 'kfc-it-ticketing-app';
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    const getColRef = (colName) => collection(db, 'artifacts', appId, 'public', 'data', colName);
+
+    const TELEGRAM_BOT_TOKEN = "9270438819:AAEN0kXe3_HQowfBXB0wqlAbiSlwtqK0hwc";
+    const TELEGRAM_CHAT_ID = "-1004328054222";
+
+    let accounts = [
+      { username: 'Shahi', empId: '100001', password: '123', role: 'user' },
+      { username: 'Admin', empId: '000001', password: 'Admin@123', role: 'admin' },
+      { username: 'superadmin', empId: '000000', password: '123', role: 'superadmin' }
+    ];
+    let tickets = [];
+    let currentUser = null;
+    let activeEditingTicketId = null;
+    let severityChartInstance = null;
+    let issueTypeChartInstance = null;
+    let isDarkMode = true;
+    let isLiquidGlass = false;
+    let timeframeMode = 'month';
+    let lastCheckedDayKey = '';
+    let alertClearTimer = null;
+
+    const severityMap = {
+      'NETWORK DOWN': 'Critical',
+      'CAMERA DOWN': 'Critical',
+      'WIFI DOWN': 'Critical',
+      'PC PASSWORD LOCK': 'Critical',
+      'MAIL (OUTLOOK) PASSWORD ISSUE': 'Critical',
+      'HR METRICS APP ISSUE': 'Critical',
+      'PC INTERNET SLOW': 'Medium',
+      'WIFI SLOW': 'Medium',
+      'PRINTER NOT WORKING': 'Medium',
+      'SCANNER NOT WORKING': 'Medium',
+      'WIFI PASSWORD': 'Low',
+      'PC REQUEST': 'Low',
+      'MOBILE REQUEST': 'Low',
+      'DEVICE REQUEST': 'Low',
+      'OTHER ISSUE': 'Low'
+    };
+
+    function formatMaldivesTimestamp(ms = Date.now()) {
+      return new Date(ms).toLocaleString("en-US", { timeZone: "Indian/Maldives" });
+    }
+
+    function getMaldivesNowParts() {
+      const formatter = new Intl.DateTimeFormat('en-CA', {
+        timeZone: 'Indian/Maldives',
+        year: 'numeric',
+        month: '2-digit',
+        day: '2-digit'
+      });
+      const parts = formatter.formatToParts(new Date());
+      const year = parseInt(parts.find(p => p.type === 'year').value, 10);
+      const month = parseInt(parts.find(p => p.type === 'month').value, 10);
+      const day = parseInt(parts.find(p => p.type === 'day').value, 10);
+      return {
+        year,
+        month,
+        day,
+        isoDate: `${year}-${String(month).padStart(2, '0')}-${String(day).padStart(2, '0')}`
+      };
+    }
+
+    function extractTicketCalendarParts(ticket) {
+      if (!ticket) return null;
+
+      if (typeof ticket.createdTimestamp === 'number' && !isNaN(ticket.createdTimestamp)) {
+        const d = new Date(ticket.createdTimestamp);
+        const formatter = new Intl.DateTimeFormat('en-CA', {
+          timeZone: 'Indian/Maldives',
+          year: 'numeric',
+          month: '2-digit',
+          day: '2-digit'
+        });
+        const parts = formatter.formatToParts(d);
+        return {
+          year: parseInt(parts.find(p => p.type === 'year').value, 10),
+          month: parseInt(parts.find(p => p.type === 'month').value, 10),
+          day: parseInt(parts.find(p => p.type === 'day').value, 10)
+        };
+      }
+
+      const dateStr = String(ticket.createdAt || '').trim();
+      if (!dateStr) return null;
+
+      const isoMatch = dateStr.match(/^(\d{4})[-/](\d{1,2})[-/](\d{1,2})/);
+      if (isoMatch) {
+        return {
+          year: parseInt(isoMatch[1], 10),
+          month: parseInt(isoMatch[2], 10),
+          day: parseInt(isoMatch[3], 10)
+        };
+      }
+
+      const parsed = Date.parse(dateStr);
+      if (!isNaN(parsed)) {
+        const d = new Date(parsed);
+        return {
+          year: d.getFullYear(),
+          month: d.getMonth() + 1,
+          day: d.getDate()
+        };
+      }
+
+      return null;
+    }
+
+    function parseTicketDate(ticketOrStr) {
+      if (!ticketOrStr) return 0;
+
+      if (typeof ticketOrStr === 'object') {
+        if (typeof ticketOrStr.createdTimestamp === 'number' && !isNaN(ticketOrStr.createdTimestamp)) {
+          return ticketOrStr.createdTimestamp;
+        }
+        const parts = extractTicketCalendarParts(ticketOrStr);
+        const rawStr = String(ticketOrStr.createdAt || '');
+        if (parts) {
+          const timeMatch = rawStr.match(/(\d{1,2}):(\d{2})(?::(\d{2}))?\s*(AM|PM)?/i);
+          let hours = 0, mins = 0, secs = 0;
+          if (timeMatch) {
+            hours = parseInt(timeMatch[1], 10);
+            mins = parseInt(timeMatch[2], 10);
+            secs = timeMatch[3] ? parseInt(timeMatch[3], 10) : 0;
+            const ampm = (timeMatch[4] || '').toUpperCase();
+            if (ampm === 'PM' && hours < 12) hours += 12;
+            if (ampm === 'AM' && hours === 12) hours = 0;
+          }
+          return new Date(parts.year, parts.month - 1, parts.day, hours, mins, secs).getTime();
+        }
+        return Date.parse(rawStr) || 0;
+      }
+
+      return Date.parse(ticketOrStr) || 0;
+    }
+
+    window.setTimeframeMode = function(mode) {
+      timeframeMode = mode;
+      const pill = document.getElementById('wormPill');
+      const btnDay = document.getElementById('toggleDay');
+      const btnMonth = document.getElementById('toggleMonth');
+      const btnYear = document.getElementById('toggleYear');
+      const btnDate = document.getElementById('toggleDate');
+      const datePickerWrapper = document.getElementById('specificDatePickerWrapper');
+      const specificDateInput = document.getElementById('dashboardSpecificDate');
+
+      if (specificDateInput && !specificDateInput.value) {
+        specificDateInput.value = getMaldivesNowParts().isoDate;
+      }
+
+      if (datePickerWrapper) {
+        if (mode === 'date') {
+          datePickerWrapper.classList.remove('hidden');
+          datePickerWrapper.classList.add('flex');
+        } else {
+          datePickerWrapper.classList.add('hidden');
+          datePickerWrapper.classList.remove('flex');
+        }
+      }
+
+      const activeColor = isLiquidGlass ? '#ffffff' : (isDarkMode ? '#1c1917' : '#ffffff');
+      const inactiveColor = isDarkMode ? '#d6d3d1' : '#334155';
+
+      if (pill) {
+        btnDay.style.color = inactiveColor;
+        btnMonth.style.color = inactiveColor;
+        btnYear.style.color = inactiveColor;
+        btnDate.style.color = inactiveColor;
+
+        if (mode === 'day') {
+          pill.style.transform = 'translateX(0%)';
+          btnDay.style.color = activeColor;
+        } else if (mode === 'month') {
+          pill.style.transform = 'translateX(100%)';
+          btnMonth.style.color = activeColor;
+        } else if (mode === 'year') {
+          pill.style.transform = 'translateX(200%)';
+          btnYear.style.color = activeColor;
+        } else {
+          pill.style.transform = 'translateX(300%)';
+          btnDate.style.color = activeColor;
+        }
+      }
+      renderAdminDashboard();
+    };
+
+    async function updateMaldivesTimeAndWeather() {
+      try {
+        const nowMVT = new Date().toLocaleString("en-US", { timeZone: "Indian/Maldives" });
+        const mvtDate = new Date(nowMVT);
+        
+        const hours = String(mvtDate.getHours()).padStart(2, '0');
+        const mins = String(mvtDate.getMinutes()).padStart(2, '0');
+        const secs = String(mvtDate.getSeconds()).padStart(2, '0');
+        
+        const clockEl = document.getElementById('maldivesClock');
+        if (clockEl) {
+          clockEl.innerText = `${hours}:${mins}:${secs} MVT`;
+        }
+
+        const currentNowParts = getMaldivesNowParts();
+        if (lastCheckedDayKey && lastCheckedDayKey !== currentNowParts.isoDate) {
+          lastCheckedDayKey = currentNowParts.isoDate;
+          const dateInput = document.getElementById('actionTargetDate');
+          if (dateInput) dateInput.value = currentNowParts.isoDate;
+          const dashDateInput = document.getElementById('dashboardSpecificDate');
+          if (dashDateInput) dashDateInput.value = currentNowParts.isoDate;
+          if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) {
+            renderAdminDashboard();
+          }
+        } else if (!lastCheckedDayKey) {
+          lastCheckedDayKey = currentNowParts.isoDate;
+        }
+
+        const weatherContainer = document.getElementById('maldivesWeatherWidget');
+        if (weatherContainer && !weatherContainer.dataset.fetched) {
+          weatherContainer.dataset.fetched = "true";
+          try {
+            const res = await fetch('https://api.open-meteo.com/v1/forecast?latitude=0.7342&longitude=73.4357&current=temperature_2m,weather_code');
+            const data = await res.json();
+            
+            if (data && data.current) {
+              const temp = Math.round(data.current.temperature_2m);
+              const wCode = data.current.weather_code;
+              
+              let weatherDesc = "CLEAR";
+              let iconHtml = `<i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>`;
+              
+              if ((wCode >= 51 && wCode <= 67) || (wCode >= 80 && wCode <= 82)) {
+                weatherDesc = "LIGHT RAIN";
+                iconHtml = `
+                  <div class="relative flex items-center justify-center w-5 h-5 overflow-hidden text-cyan-400">
+                    <div class="flex gap-0.5 items-start">
+                      <span class="w-0.5 h-1.5 bg-cyan-400 rounded-full rain-drop-1"></span>
+                      <span class="w-0.5 h-2 bg-cyan-400 rounded-full rain-drop-2"></span>
+                      <span class="w-0.5 h-1.5 bg-cyan-400 rounded-full rain-drop-3"></span>
+                    </div>
+                  </div>`;
+              } else if (wCode >= 95) {
+                weatherDesc = "THUNDERSTORM";
+                iconHtml = `<i data-lucide="cloud-lightning" class="w-4 h-4 text-amber-400"></i>`;
+              } else if (wCode >= 1 && wCode <= 3) {
+                weatherDesc = "PARTLY CLOUDY";
+                iconHtml = `<i data-lucide="cloud-sun" class="w-4 h-4 text-cyan-300"></i>`;
+              }
+
+              weatherContainer.innerHTML = `
+                ${iconHtml}
+                <span class="font-semibold tracking-wider">VILIGILI / KOODDOO ${temp}°C [${weatherDesc}]</span>
+              `;
+              lucide.createIcons();
+            } else {
+              throw new Error("Invalid weather payload");
+            }
+          } catch (apiErr) {
+            weatherContainer.innerHTML = `
+              <i data-lucide="sun" class="w-4 h-4 text-amber-400"></i>
+              <span class="font-semibold tracking-wider">VILIGILI / KOODDOO 30°C [CLEAR]</span>
+            `;
+            lucide.createIcons();
+          }
+        }
+      } catch (e) {}
+    }
+    setInterval(updateMaldivesTimeAndWeather, 1000);
+    window.addEventListener('DOMContentLoaded', () => {
+      updateMaldivesTimeAndWeather();
+      const todayIso = getMaldivesNowParts().isoDate;
+      const dateInput = document.getElementById('actionTargetDate');
+      if (dateInput) dateInput.value = todayIso;
+      const dashDateInput = document.getElementById('dashboardSpecificDate');
+      if (dashDateInput) dashDateInput.value = todayIso;
+      setTimeframeMode('month');
+    });
+
+    function updateConnectionStatus() {
+      const dotEl = document.getElementById('connectionStatusDot');
+      const textEl = document.getElementById('connectionStatusText');
+      if (!dotEl || !textEl) return;
+
+      if (navigator.onLine) {
+        dotEl.className = "w-2 h-2 bg-emerald-500 rounded-full";
+        textEl.innerText = "ONLINE (SYNCED)";
+      } else {
+        dotEl.className = "w-2 h-2 bg-rose-600 rounded-full animate-pulse";
+        textEl.innerText = "OFFLINE";
+      }
+    }
+    window.addEventListener('online', updateConnectionStatus);
+    window.addEventListener('offline', updateConnectionStatus);
+
+    function getRealTimeGreeting() {
+      const formatter = new Intl.DateTimeFormat("en-US", {
+        timeZone: "Indian/Maldives",
+        hour: "numeric",
+        hour12: false
+      });
+      const currentHour = parseInt(formatter.format(new Date()), 10);
+      
+      if (currentHour >= 5 && currentHour < 12) return "Good Morning";
+      else if (currentHour >= 12 && currentHour < 17) return "Good Afternoon";
+      else return "Good Evening";
+    }
+
+    async function sendTelegramAlert(ticket) {
+      if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "YOUR_TELEGRAM_BOT_TOKEN_HERE") return;
+
+      let statusIcon = "🔴 🔺";
+      let statusText = "OPEN";
+      if (ticket.status === "In Progress") { statusIcon = "🟡 🔺"; statusText = "IN PROGRESS"; }
+      if (ticket.status === "Resolved") { statusIcon = "🟢 🔺"; statusText = "RESOLVED"; }
+      if (ticket.status === "Closed") { statusIcon = "🔴 🔻"; statusText = "CLOSED"; }
+
+      const greeting = getRealTimeGreeting();
+      const textMessage = 
+        `🚨 *NEW IT TICKET DISPATCHED*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `👋 *${greeting}, Team!*\n\n` +
+        `🆔 *Ticket ID:*     \`${ticket.id}\`\n` +
+        `👤 *Employee:*    \`${ticket.employee} (${ticket.empId})\`\n` +
+        `📂 *Category:*    \`${ticket.issueType}\`\n` +
+        `⚡ *Severity:*    \`${ticket.severity.toUpperCase()}\`\n` +
+        `📊 *Status:*      ${statusIcon} \`${statusText}\`\n` +
+        `💬 *Details:*     \`${ticket.description}\`\n` +
+        `⏰ *Timestamp:*   \`${ticket.createdAt}\`\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━`;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: textMessage, parse_mode: "Markdown" })
+        });
+      } catch (err) {}
+    }
+
+    async function sendTelegramStatusAlert(ticket, oldStatus, newStatus, assignee, notes, userReply = "", replyTimestamp = "") {
+      if (!TELEGRAM_BOT_TOKEN || TELEGRAM_BOT_TOKEN === "YOUR_TELEGRAM_BOT_TOKEN_HERE") return;
+
+      const greeting = getRealTimeGreeting();
+      const updateTime = replyTimestamp || formatMaldivesTimestamp();
+      const textMessage = 
+        `🔄 *IT TICKET STATUS UPDATE*\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━\n` +
+        `👋 *${greeting}, Team!*\n\n` +
+        `🆔 *Ticket ID:*     \`${ticket.id}\`\n` +
+        `👤 *Employee:*    \`${ticket.employee} (${ticket.empId})\`\n` +
+        `📂 *Category:*    \`${ticket.issueType}\`\n` +
+        `🔀 *Transition:*  \`${oldStatus}\` ➔ \`${newStatus}\`\n` +
+        `${userReply ? `💬 *User Reply:*  \`${userReply}\` (${updateTime})\n` : ''}` +
+        `🛠️ *Tech:*        \`${assignee || 'Unassigned'}\`\n` +
+        `📝 *Notes:*       \`${notes || 'No notes added.'}\`\n` +
+        `⏰ *Timestamp:*   \`${updateTime}\`\n` +
+        `━━━━━━━━━━━━━━━━━━━━━━`;
+
+      try {
+        await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text: textMessage, parse_mode: "Markdown" })
+        });
+      } catch (err) {}
+    }
+
+    window.playAlertSound = function(type = 'success') {
+      try {
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+
+        if (type === 'critical') {
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(440, audioCtx.currentTime + 0.15);
+          gain.gain.setValueAtTime(0.3, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.4);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.4);
+        } else {
+          osc.frequency.setValueAtTime(587.33, audioCtx.currentTime);
+          osc.frequency.setValueAtTime(880, audioCtx.currentTime + 0.1);
+          gain.gain.setValueAtTime(0.2, audioCtx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.25);
+          osc.start();
+          osc.stop(audioCtx.currentTime + 0.25);
+        }
+      } catch (e) {}
+    };
+
+    async function initCloudData() {
+      updateConnectionStatus();
+      try {
+        const userCol = getColRef("users");
+        const userSnapshot = await getDocs(userCol);
+        if (userSnapshot.empty) {
+          for (let acc of accounts) await addDoc(userCol, acc);
+        } else {
+          const existingAccounts = userSnapshot.docs.map(d => d.data());
+          if (!existingAccounts.some(a => a.username.toLowerCase() === 'superadmin')) {
+            await addDoc(userCol, { username: 'superadmin', empId: '000000', password: '123', role: 'superadmin' });
+          }
+        }
+
+        onSnapshot(userCol, (snapshot) => {
+          accounts = snapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
+          if (currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+            renderAccountsManagementTable();
+          }
+        });
+
+        onSnapshot(getColRef("tickets"), (snapshot) => {
+          tickets = snapshot.docs.map(doc => ({ firebaseId: doc.id, ...doc.data() }));
+          if (currentUser) {
+            if (currentUser.role === 'admin' || currentUser.role === 'superadmin') renderAdminDashboard();
+            else renderUserTickets();
+          }
+        });
+
+        onSnapshot(getColRef("alerts"), (snapshot) => {
+          const now = Date.now();
+          snapshot.docs.forEach(async (alertDoc) => {
+            const data = alertDoc.data();
+            if (now - data.timestamp > 5000) {
+              await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'alerts', alertDoc.id));
+            }
+          });
+
+          if (currentUser && (currentUser.role === 'admin' || currentUser.role === 'superadmin')) {
+            const alerts = snapshot.docs.map(d => d.data());
+            if (alerts.length > 0) playAlertSound('critical');
+            renderAdminAlerts(alerts);
+          }
+        });
+      } catch (err) {}
+    }
+
+    window.getSeverityBadge = function(severity) {
+      if (severity === 'Critical') {
+        return `<span class="px-2.5 py-1 bg-rose-500/15 text-rose-600 dark:text-rose-300 border border-rose-400/35 font-semibold text-[10px] uppercase tracking-wider backdrop-blur-md inline-flex items-center justify-center min-h-[24px] rounded-lg shadow-sm">Critical</span>`;
+      } else if (severity === 'Medium') {
+        return `<span class="px-2.5 py-1 bg-amber-500/15 text-amber-700 dark:text-amber-300 border border-amber-400/35 font-semibold text-[10px] uppercase tracking-wider backdrop-blur-md inline-flex items-center justify-center min-h-[24px] rounded-lg shadow-sm">Medium</span>`;
+      } else {
+        return `<span class="px-2.5 py-1 bg-slate-500/15 text-slate-700 dark:text-slate-300 border border-slate-400/30 font-semibold text-[10px] uppercase tracking-wider backdrop-blur-md inline-flex items-center justify-center min-h-[24px] rounded-lg shadow-sm">Low</span>`;
+      }
+    };
+
+    window.autoSelectSeverity = function() {
+      const category = document.getElementById('ticketIssueType').value;
+      const severitySelect = document.getElementById('ticketSeverity');
+      if (severityMap[category]) {
+        severitySelect.value = severityMap[category];
+      }
+    };
+
+    window.toggleLiquidGlass = function() {
+      isLiquidGlass = !isLiquidGlass;
+      const htmlEl = document.documentElement;
+      const btn = document.getElementById('liquidGlassToggleBtn');
+      const label = document.getElementById('liquidGlassLabel');
+      const icon = document.getElementById('liquidGlassIcon');
+
+      if (isLiquidGlass) {
+        htmlEl.classList.add('liquid-glass');
+        if (btn) btn.classList.add('liquid-toggle-active');
+        if (label) label.innerText = 'NORMAL';
+        if (icon) icon.classList.remove('text-cyan-500');
+      } else {
+        htmlEl.classList.remove('liquid-glass');
+        if (btn) btn.classList.remove('liquid-toggle-active');
+        if (label) label.innerText = 'LIQUID GLASS';
+        if (icon) icon.classList.add('text-cyan-500');
+      }
+
+      setTimeframeMode(timeframeMode);
+      renderCharts();
+    };
+
+    window.toggleTheme = function() {
+      isDarkMode = !isDarkMode;
+      const htmlEl = document.documentElement;
+      const icon = document.getElementById('themeIcon');
+      const label = document.getElementById('themeLabel');
+
+      if (isDarkMode) {
+        htmlEl.classList.add('dark');
+        icon.setAttribute('data-lucide', 'sun');
+        label.innerText = 'LIGHT';
+      } else {
+        htmlEl.classList.remove('dark');
+        icon.setAttribute('data-lucide', 'moon');
+        label.innerText = 'DARK';
+      }
+      lucide.createIcons();
+      setTimeframeMode(timeframeMode);
+      renderCharts();
+    };
+
+    window.showToast = function(message, type = 'info', playSound = false) {
+      const container = document.getElementById('toastContainer');
+      const toast = document.createElement('div');
+      
+      const colors = {
+        success: isDarkMode ? 'bg-emerald-950/80 text-emerald-200 border-emerald-700/50' : 'bg-emerald-100 text-emerald-900 border-emerald-300',
+        error: isDarkMode ? 'bg-rose-950/80 text-rose-200 border-rose-700/50' : 'bg-rose-100 text-rose-900 border-rose-300',
+        info: isDarkMode ? 'bg-stone-900/80 text-stone-200 border-stone-700/50' : 'bg-slate-100 text-slate-900 border-slate-300'
+      };
+
+      toast.className = `p-3.5 canvas-panel text-xs font-semibold border ${colors[type] || colors.info} shadow-2xl flex items-center gap-2 animate-glass-in backdrop-blur-md`;
+      toast.innerText = message;
+      container.appendChild(toast);
+
+      if (playSound) playAlertSound(type === 'success' ? 'success' : 'critical');
+      setTimeout(() => toast.remove(), 4000);
+    };
+
+    window.openConfirmModal = function(title, message, onConfirm) {
+      document.getElementById('confirmTitle').innerText = title;
+      document.getElementById('confirmMessage').innerText = message;
+      const okBtn = document.getElementById('confirmOkBtn');
+      const newOkBtn = okBtn.cloneNode(true);
+      okBtn.parentNode.replaceChild(newOkBtn, okBtn);
+      
+      newOkBtn.onclick = function() {
+        closeConfirmModal();
+        onConfirm();
+      };
+      document.getElementById('confirmModal').classList.remove('hidden');
+    };
+
+    window.closeConfirmModal = function() {
+      document.getElementById('confirmModal').classList.add('hidden');
+    };
+
+    window.handleLogin = function(e) {
+      e.preventDefault();
+      const inputVal = document.getElementById('loginIdentifier').value.trim().toLowerCase();
+      const passVal = document.getElementById('loginPassword').value.trim();
+
+      const matchedAccount = accounts.find(acc => 
+        (acc.username.toLowerCase() === inputVal || acc.empId === inputVal) &&
+        acc.password === passVal
+      );
+
+      if (!matchedAccount) {
+        showToast('Invalid Login Credentials! Verify Username/ID and Password.', 'error', true);
+        return;
+      }
+
+      currentUser = matchedAccount;
+      
+      const userBadgeEl = document.getElementById('loggedInUserBadge');
+      const userTextEl = document.getElementById('loggedInUserText');
+      if (userBadgeEl && userTextEl) {
+        let roleStr = 'USER';
+        if (currentUser.role === 'admin') roleStr = 'ADMIN';
+        if (currentUser.role === 'superadmin') roleStr = 'SUPER ADMIN';
+        userTextEl.innerText = `${currentUser.username.toUpperCase()} (${roleStr})`;
+        userBadgeEl.classList.remove('hidden');
+        userBadgeEl.classList.add('flex');
+      }
+
+      document.getElementById('navLogoutBtn').classList.remove('hidden');
+      showToast(`Authenticated: ${matchedAccount.username} (${matchedAccount.role.toUpperCase()})`, 'success', true);
+
+      if (matchedAccount.role === 'admin' || matchedAccount.role === 'superadmin') {
+        showView('adminPortal');
+        resetAdminView();
+      } else {
+        document.getElementById('ticketEmployee').value = matchedAccount.username;
+        document.getElementById('ticketEmpId').value = matchedAccount.empId;
+        showView('userPortal');
+        resetUserView();
+      }
+    };
+
+    window.confirmLogout = function() {
+      openConfirmModal('Confirm Logout', 'Are you sure you want to log out of the system?', () => {
+        currentUser = null;
+        document.getElementById('loggedInUserBadge').classList.add('hidden');
+        document.getElementById('loggedInUserBadge').classList.remove('flex');
+        document.getElementById('navLogoutBtn').classList.add('hidden');
+        document.getElementById('loginForm').reset();
+        showView('loginView');
+        showToast('Logged out successfully.', 'info');
+      });
+    };
+
+    window.showView = function(viewId) {
+      document.getElementById('loginView').classList.add('hidden');
+      document.getElementById('userPortal').classList.add('hidden');
+      document.getElementById('adminPortal').classList.add('hidden');
+      
+      const activeEl = document.getElementById(viewId);
+      activeEl.classList.remove('hidden');
+      activeEl.classList.remove('animate-glass-in');
+      void activeEl.offsetWidth;
+      activeEl.classList.add('animate-glass-in');
+      lucide.createIcons();
+    };
+
+    window.promptCreateTicket = function(e) {
+      e.preventDefault();
+      const empIdVal = document.getElementById('ticketEmpId').value.trim();
+      if (!/^\d{6}$/.test(empIdVal)) {
+        showToast('Employee ID must be exactly 6 numeric digits.', 'error', true);
+        return;
+      }
+
+      openConfirmModal('Confirm Dispatch', 'Are you sure you want to dispatch this IT ticket?', () => {
+        executeCreateTicket();
+      });
+    };
+
+    async function executeCreateTicket() {
+      const dispatchBtn = document.getElementById('dispatchBtn');
+      if (dispatchBtn.disabled) return;
+      dispatchBtn.disabled = true;
+      dispatchBtn.style.opacity = '0.6';
+
+      const nowMs = Date.now();
+      const newTicket = {
+        id: 'T-' + Math.floor(1000 + Math.random() * 9000),
+        employee: document.getElementById('ticketEmployee').value,
+        empId: document.getElementById('ticketEmpId').value,
+        issueType: document.getElementById('ticketIssueType').value,
+        severity: document.getElementById('ticketSeverity').value,
+        status: 'Open',
+        description: document.getElementById('ticketDescription').value,
+        createdAt: formatMaldivesTimestamp(nowMs),
+        createdTimestamp: nowMs,
+        notes: '',
+        notesUpdatedAt: '',
+        assignee: 'Unassigned',
+        username: currentUser ? currentUser.username : 'Guest',
+        userReply: '',
+        userReplyAt: ''
+      };
+
+      try {
+        await addDoc(getColRef("tickets"), newTicket);
+        await addDoc(getColRef("alerts"), {
+          ticketId: newTicket.id,
+          employee: newTicket.employee,
+          empId: newTicket.empId,
+          issueType: newTicket.issueType,
+          severity: newTicket.severity,
+          timestamp: nowMs
+        });
+
+        await sendTelegramAlert(newTicket);
+        document.getElementById('ticketDescription').value = '';
+        showToast(`Ticket ${newTicket.id} successfully dispatched!`, 'success', true);
+        renderUserTickets();
+      } catch (err) {
+        showToast(`Error saving ticket: ${err.message}`, 'error', true);
+      } finally {
+        dispatchBtn.disabled = false;
+        dispatchBtn.style.opacity = '1';
+      }
+    }
+
+    window.confirmResetUserView = function() {
+      resetUserView();
+    };
+
+    window.confirmResetAdminView = function() {
+      resetAdminView();
+    };
+
+    window.resetUserView = function() {
+      if (document.getElementById('userTicketSort')) document.getElementById('userTicketSort').value = 'newest';
+      if (document.getElementById('userTicketSearch')) document.getElementById('userTicketSearch').value = '';
+      renderUserTickets();
+    };
+
+    window.resetAdminView = function() {
+      document.getElementById('filterSeverity').value = 'ALL';
+      document.getElementById('filterStatus').value = 'ALL';
+      if (document.getElementById('adminTicketSearch')) document.getElementById('adminTicketSearch').value = '';
+      if (document.getElementById('adminTimeSort')) document.getElementById('adminTimeSort').value = 'newest';
+      renderAdminDashboard();
+    };
+
+    window.renderUserTickets = function() {
+      const list = document.getElementById('userTicketsList');
+      const sortMode = document.getElementById('userTicketSort') ? document.getElementById('userTicketSort').value : 'newest';
+      const searchTerm = document.getElementById('userTicketSearch') ? document.getElementById('userTicketSearch').value.toLowerCase().trim() : '';
+
+      let allUserTickets = tickets.filter(t => 
+        !currentUser || 
+        (t.username && t.username.toLowerCase() === currentUser.username.toLowerCase()) || 
+        t.empId === currentUser.empId
+      );
+
+      const statTotal = document.getElementById('userStatTotal');
+      const statOpen = document.getElementById('userStatOpen');
+      const statProgress = document.getElementById('userStatProgress');
+      const statClosed = document.getElementById('userStatClosed');
+      if (statTotal) statTotal.innerText = allUserTickets.length;
+      if (statOpen) statOpen.innerText = allUserTickets.filter(t => t.status === 'Open').length;
+      if (statProgress) statProgress.innerText = allUserTickets.filter(t => t.status === 'In Progress').length;
+      if (statClosed) statClosed.innerText = allUserTickets.filter(t => t.status === 'Closed' || t.status === 'Resolved').length;
+
+      let userTickets = [...allUserTickets];
+
+      if (searchTerm) {
+        userTickets = userTickets.filter(t => 
+          (t.id && t.id.toLowerCase().includes(searchTerm)) ||
+          (t.issueType && t.issueType.toLowerCase().includes(searchTerm)) ||
+          (t.description && t.description.toLowerCase().includes(searchTerm)) ||
+          (t.status && t.status.toLowerCase().includes(searchTerm)) ||
+          (t.severity && t.severity.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (sortMode === 'newest') {
+        userTickets.sort((a, b) => parseTicketDate(b) - parseTicketDate(a));
+      } else if (sortMode === 'oldest') {
+        userTickets.sort((a, b) => parseTicketDate(a) - parseTicketDate(b));
+      } else if (sortMode === 'severity') {
+        const rank = { Critical: 3, Medium: 2, Low: 1 };
+        userTickets.sort((a, b) => (rank[b.severity] || 0) - (rank[a.severity] || 0));
+      } else if (sortMode === 'status') {
+        const rank = { Open: 4, 'In Progress': 3, Resolved: 2, Closed: 1 };
+        userTickets.sort((a, b) => (rank[b.status] || 0) - (rank[a.status] || 0));
+      }
+
+      if (userTickets.length === 0) {
+        list.innerHTML = `<div class="p-8 text-center text-xs opacity-60 canvas-card font-mono">No matching tickets found.</div>`;
+        return;
+      }
+
+      list.innerHTML = userTickets.map((t) => {
+        const canReply = (t.status !== 'Closed');
+        return `
+          <div class="canvas-card p-4 space-y-2 border-l-4 ${t.severity === 'Critical' ? 'border-l-rose-600' : t.severity === 'Medium' ? 'border-l-amber-500' : 'border-l-slate-400 dark:border-l-stone-500'} animate-glass-in">
+            <div class="flex items-center justify-between">
+              <span class="font-mono text-xs font-semibold">${t.id} - ${t.issueType}</span>
+              <span class="px-2 py-0.5 canvas-panel text-[10px] font-semibold uppercase tracking-wider backdrop-blur-md rounded-md">${t.status}</span>
+            </div>
+            <p class="text-xs opacity-90">${t.description}</p>
+            ${t.notes ? `
+              <div class="p-2.5 canvas-panel border-l-2 border-l-slate-400 dark:border-l-stone-500 text-xs space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-semibold opacity-70 text-[10px] uppercase">IT Technician Resolution / Notes:</span>
+                  ${t.notesUpdatedAt ? `<span class="text-[10px] font-mono opacity-75 text-amber-500 dark:text-amber-400">Updated: ${t.notesUpdatedAt}</span>` : ''}
+                </div>
+                <p class="opacity-95 italic text-amber-500 dark:text-amber-400">${t.notes}</p>
+              </div>
+            ` : ''}
+            ${t.userReply ? `
+              <div class="p-2.5 canvas-panel border-l-2 border-l-emerald-600 text-xs space-y-1">
+                <div class="flex items-center justify-between gap-2">
+                  <span class="font-semibold text-emerald-600 dark:text-emerald-500 text-[10px] uppercase">User Reply:</span>
+                  <span class="text-[10px] font-mono opacity-80 text-emerald-600 dark:text-emerald-400">${t.userReplyAt ? `Replied: ${t.userReplyAt}` : ''}</span>
+                </div>
+                <p class="opacity-95 italic text-emerald-600 dark:text-emerald-400">${t.userReply}</p>
+              </div>
+            ` : ''}
+
+            ${canReply ? `
+              <div class="mt-3 pt-3 border-t border-slate-200 dark:border-stone-800/40 space-y-2">
+                <label class="block text-[11px] font-semibold uppercase opacity-80">Reply to Technician:</label>
+                <div class="flex gap-2">
+                  <input type="text" id="replyInput_${t.firebaseId}" placeholder="Type your reply here..." class="canvas-input px-2.5 py-1.5 text-xs flex-1" value="${t.userReply || ''}">
+                  <button onclick="submitUserReplyOnly('${t.firebaseId}')" class="px-3 py-1.5 btn-flat-primary text-[11px] font-semibold whitespace-nowrap">REPLY</button>
+                </div>
+              </div>
+            ` : ''}
+
+            <div class="flex justify-between items-center text-[10px] opacity-80 pt-1 border-t border-slate-200 dark:border-stone-800/40 font-mono">
+              <span>Severity: ${window.getSeverityBadge(t.severity)}</span>
+              <span>Submitted: ${t.createdAt}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+
+      lucide.createIcons();
+    };
+
+    window.submitUserReplyOnly = async function(firebaseId) {
+      const inputEl = document.getElementById(`replyInput_${firebaseId}`);
+      if (!inputEl) return;
+      const replyText = inputEl.value.trim();
+
+      if (!replyText) {
+        showToast('Please type a reply before submitting.', 'error', true);
+        return;
+      }
+
+      const ticket = tickets.find(t => t.firebaseId === firebaseId);
+      if (!ticket) return;
+
+      const replyTime = formatMaldivesTimestamp();
+
+      try {
+        const ticketRef = doc(db, 'artifacts', appId, 'public', 'data', 'tickets', firebaseId);
+        await updateDoc(ticketRef, { 
+          userReply: replyText,
+          userReplyAt: replyTime
+        });
+
+        await sendTelegramStatusAlert(ticket, ticket.status, ticket.status, ticket.assignee, ticket.notes, replyText, replyTime);
+        showToast(`Reply sent for ${ticket.id}! Admin notified in portal.`, 'success', true);
+        renderUserTickets();
+      } catch (err) {
+        showToast('Failed to submit reply to cloud.', 'error', true);
+      }
+    };
+
+    window.renderAdminDashboard = function() {
+      updateAdminMetrics();
+      renderAdminQueue();
+      renderCharts();
+
+      const accountsSection = document.getElementById('superAdminAccountsSection');
+      const portalTitle = document.getElementById('adminPortalTitle');
+      const portalSubtitle = document.getElementById('adminPortalSubtitle');
+      const mgmtTitle = document.getElementById('accountMgmtTitle');
+      const mgmtSubtitle = document.getElementById('accountMgmtSubtitle');
+      const mgmtBadge = document.getElementById('accountMgmtBadge');
+
+      if (currentUser && currentUser.role === 'superadmin') {
+        if (accountsSection) {
+          accountsSection.classList.remove('hidden');
+          accountsSection.classList.remove('border-amber-500/30');
+          accountsSection.classList.add('border-rose-500/30');
+        }
+        if (portalTitle) portalTitle.innerText = "SUPER ADMINISTRATOR COMMAND CENTER";
+        if (portalSubtitle) portalSubtitle.innerText = "Full Enterprise Control: Master Ticketing, Technician Assignment & Account Management";
+        if (mgmtTitle) {
+          mgmtTitle.innerHTML = `<i data-lucide="shield-alert" class="w-4 h-4"></i> SUPER ADMIN ACCOUNT MANAGEMENT`;
+          mgmtTitle.className = "font-bold text-sm uppercase tracking-wider text-rose-500 flex items-center gap-2";
+        }
+        if (mgmtSubtitle) mgmtSubtitle.innerText = "Create, Reset Password & Delete Super Admin / Admin / Staff Accounts";
+        if (mgmtBadge) {
+          mgmtBadge.innerText = "SUPER ADMIN ACCESS";
+          mgmtBadge.className = "px-2.5 py-1 bg-rose-950/60 text-rose-300 font-mono text-[10px] font-semibold border border-rose-700/60 rounded-md";
+        }
+        renderAccountsManagementTable();
+      } else if (currentUser && currentUser.role === 'admin') {
+        if (accountsSection) {
+          accountsSection.classList.remove('hidden');
+          accountsSection.classList.remove('border-rose-500/30');
+          accountsSection.classList.add('border-amber-500/30');
+        }
+        if (portalTitle) portalTitle.innerText = "ADMINISTRATOR OPERATIONS CENTER";
+        if (portalSubtitle) portalSubtitle.innerText = "Master Ticket Dispatch, Passwords & Staff User Management";
+        if (mgmtTitle) {
+          mgmtTitle.innerHTML = `<i data-lucide="users" class="w-4 h-4"></i> USER ACCOUNT MANAGEMENT`;
+          mgmtTitle.className = "font-bold text-sm uppercase tracking-wider text-amber-500 flex items-center gap-2";
+        }
+        if (mgmtSubtitle) mgmtSubtitle.innerText = "Create, Reset Password & Delete Staff User Accounts";
+        if (mgmtBadge) {
+          mgmtBadge.innerText = "ADMIN ACCESS (STAFF ONLY)";
+          mgmtBadge.className = "px-2.5 py-1 bg-amber-950/60 text-amber-300 font-mono text-[10px] font-semibold border border-amber-700/60 rounded-md";
+        }
+        renderAccountsManagementTable();
+      } else {
+        if (accountsSection) accountsSection.classList.add('hidden');
+      }
+      lucide.createIcons();
+    };
+
+    function renderAccountsManagementTable() {
+      const tbody = document.getElementById('superAdminAccountsTbody');
+      if (!tbody || !currentUser) return;
+
+      let visibleAccounts = accounts;
+      if (currentUser.role === 'admin') {
+        visibleAccounts = accounts.filter(acc => acc.role === 'user');
+      }
+
+      if (!visibleAccounts || visibleAccounts.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="5" class="p-6 text-center opacity-60 font-mono">No managed accounts found.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = visibleAccounts.map(acc => {
+        const isCurrentSelf = currentUser && acc.username.toLowerCase() === currentUser.username.toLowerCase();
+        const canDelete = (currentUser.role === 'superadmin' && !isCurrentSelf) || (currentUser.role === 'admin' && acc.role === 'user');
+
+        return `
+          <tr class="hover:bg-slate-500/5 transition-colors">
+            <td class="p-3 font-semibold">${acc.username}</td>
+            <td class="p-3 font-mono opacity-80">${acc.empId || 'N/A'}</td>
+            <td class="p-3">
+              <span class="px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider rounded-md ${acc.role === 'superadmin' ? 'bg-rose-950/80 text-rose-300 border border-rose-700/60' : acc.role === 'admin' ? 'bg-amber-950/80 text-amber-300 border border-amber-700/60' : 'bg-slate-800/80 text-slate-300'}">${acc.role}</span>
+            </td>
+            <td class="p-3 font-mono text-[11px]">${acc.password}</td>
+            <td class="p-3 text-right">
+              ${canDelete ? `
+                <button onclick="confirmDeleteAccount('${acc.firebaseId}', '${acc.username}', '${acc.role}')" class="px-3 py-1 btn-flat-danger text-[11px] font-semibold flex items-center gap-1 ml-auto">
+                  <i data-lucide="trash-2" class="w-3 h-3"></i> DELETE
+                </button>
+              ` : `<span class="text-[10px] opacity-40 font-mono">${isCurrentSelf ? 'Current Session' : 'Protected'}</span>`}
+            </td>
+          </tr>
+        `;
+      }).join('');
+      lucide.createIcons();
+    }
+
+    window.confirmDeleteAccount = function(firebaseId, username, role) {
+      if (currentUser && currentUser.role === 'admin' && role !== 'user') {
+        showToast('Admins can only delete standard Staff/User accounts.', 'error', true);
+        return;
+      }
+      if (currentUser && username.toLowerCase() === currentUser.username.toLowerCase()) {
+        showToast('You cannot delete your currently active account.', 'error', true);
+        return;
+      }
+
+      openConfirmModal(
+        `Confirm Delete Account`,
+        `Are you sure you want to permanently delete ${role.toUpperCase()} account "${username}"? This action cannot be undone.`,
+        () => executeDeleteAccount(firebaseId, username)
+      );
+    };
+
+    async function executeDeleteAccount(firebaseId, username) {
+      if (!firebaseId) {
+        showToast('Invalid account ID.', 'error', true);
+        return;
+      }
+      try {
+        await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'users', firebaseId));
+        showToast(`Account "${username}" successfully deleted!`, 'success', true);
+      } catch (err) {
+        showToast(`Error deleting account: ${err.message}`, 'error', true);
+      }
+    }
+
+    function getFilteredTicketsByTimeframe() {
+      const nowParts = getMaldivesNowParts();
+
+      if (timeframeMode === 'date') {
+        const specificInput = document.getElementById('dashboardSpecificDate');
+        const targetIso = (specificInput && specificInput.value) ? specificInput.value : nowParts.isoDate;
+        const match = targetIso.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+        if (!match) return [];
+
+        const selYear = parseInt(match[1], 10);
+        const selMonth = parseInt(match[2], 10);
+        const selDay = parseInt(match[3], 10);
+
+        return tickets.filter(t => {
+          const parts = extractTicketCalendarParts(t);
+          if (!parts) return false;
+          return parts.year === selYear &&
+                 parts.month === selMonth &&
+                 parts.day === selDay;
+        });
+      }
+
+      return tickets.filter(t => {
+        const parts = extractTicketCalendarParts(t);
+        if (!parts) return false;
+
+        if (timeframeMode === 'day') {
+          return parts.year === nowParts.year &&
+                 parts.month === nowParts.month &&
+                 parts.day === nowParts.day;
+        } else if (timeframeMode === 'month') {
+          return parts.year === nowParts.year &&
+                 parts.month === nowParts.month;
+        } else {
+          return parts.year === nowParts.year;
+        }
+      });
+    }
+
+    function updateAdminMetrics() {
+      const scopedTickets = getFilteredTicketsByTimeframe();
+      document.getElementById('metricTotal').innerText = scopedTickets.length;
+      document.getElementById('metricOpen').innerText = scopedTickets.filter(t => t.status === 'Open').length;
+      document.getElementById('metricProgress').innerText = scopedTickets.filter(t => t.status === 'In Progress').length;
+      document.getElementById('metricResolved').innerText = scopedTickets.filter(t => t.status === 'Resolved' || t.status === 'Closed').length;
+      document.getElementById('metricCritical').innerText = scopedTickets.filter(t => t.severity === 'Critical' && t.status !== 'Closed').length;
+    }
+
+    function renderAdminAlerts(alerts) {
+      const container = document.getElementById('adminAlertBannerContainer');
+      if (!container) return;
+
+      if (!alerts || alerts.length === 0) {
+        container.innerHTML = '';
+        return;
+      }
+
+      container.innerHTML = alerts.map(alert => `
+        <div class="canvas-panel p-3 border-l-4 border-l-rose-600 bg-rose-950/30 text-rose-200 flex items-center justify-between animate-glass-in backdrop-blur-xl shadow-xl">
+          <div class="flex items-center gap-2 text-xs">
+            <i data-lucide="alert-triangle" class="w-4 h-4 text-rose-400"></i>
+            <span><strong>NEW TICKET ALERT:</strong> [${alert.ticketId}] <strong>${alert.employee}</strong> (ID: ${alert.empId}) reported <strong>${alert.issueType}</strong> with <strong>${alert.severity}</strong> severity.</span>
+          </div>
+          <span class="text-[10px] font-mono opacity-80">Auto-clears in 5s</span>
+        </div>
+      `).join('');
+      lucide.createIcons();
+
+      if (alertClearTimer) clearTimeout(alertClearTimer);
+      alertClearTimer = setTimeout(async () => {
+        try {
+          const alertSnapshot = await getDocs(getColRef("alerts"));
+          for (let alertDoc of alertSnapshot.docs) {
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'alerts', alertDoc.id));
+          }
+          if (container) container.innerHTML = '';
+        } catch (e) {}
+      }, 5000);
+    }
+
+    window.renderAdminQueue = function() {
+      const tbody = document.getElementById('adminQueueTbody');
+      const sevFilter = document.getElementById('filterSeverity').value;
+      const statFilter = document.getElementById('filterStatus').value;
+      const timeSort = document.getElementById('adminTimeSort') ? document.getElementById('adminTimeSort').value : 'newest';
+      const searchTerm = document.getElementById('adminTicketSearch') ? document.getElementById('adminTicketSearch').value.toLowerCase().trim() : '';
+
+      const scopedTickets = getFilteredTicketsByTimeframe();
+
+      let filtered = scopedTickets.filter(t => {
+        const matchesSev = (sevFilter === 'ALL' || t.severity === sevFilter);
+        const matchesStat = (statFilter === 'ALL' || t.status === statFilter);
+        return matchesSev && matchesStat;
+      });
+
+      if (searchTerm) {
+        filtered = filtered.filter(t => 
+          (t.id && t.id.toLowerCase().includes(searchTerm)) ||
+          (t.employee && t.employee.toLowerCase().includes(searchTerm)) ||
+          (t.empId && t.empId.toLowerCase().includes(searchTerm)) ||
+          (t.issueType && t.issueType.toLowerCase().includes(searchTerm)) ||
+          (t.description && t.description.toLowerCase().includes(searchTerm)) ||
+          (t.userReply && t.userReply.toLowerCase().includes(searchTerm))
+        );
+      }
+
+      if (timeSort === 'newest') {
+        filtered.sort((a, b) => parseTicketDate(b) - parseTicketDate(a));
+      } else {
+        filtered.sort((a, b) => parseTicketDate(a) - parseTicketDate(b));
+      }
+
+      if (filtered.length === 0) {
+        const scopeLabel = timeframeMode === 'date'
+          ? (document.getElementById('dashboardSpecificDate')?.value || 'SELECTED DATE')
+          : `CURRENT ${timeframeMode.toUpperCase()}`;
+        tbody.innerHTML = `<tr><td colspan="9" class="p-6 text-center opacity-60 font-mono">No matching queue records for ${scopeLabel}.</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = filtered.map(t => `
+        <tr class="hover:bg-slate-500/5 transition-colors">
+          <td class="p-3 font-mono font-semibold">${t.id}</td>
+          <td class="p-3 font-medium">${t.employee}</td>
+          <td class="p-3 font-mono opacity-80">${t.empId}</td>
+          <td class="p-3 font-medium">${t.issueType}</td>
+          <td class="p-3">
+            ${t.userReply ? `
+              <div class="flex flex-col items-start gap-1">
+                <span class="px-2 py-0.5 bg-emerald-500/15 text-emerald-700 dark:text-emerald-300 font-semibold text-[10px] border border-emerald-400/35 rounded-md inline-flex items-center gap-1" title="${t.userReply}">
+                  <i data-lucide="message-square" class="w-3 h-3"></i> HAS REPLY
+                </span>
+                ${t.userReplyAt ? `<span class="text-[10px] font-mono opacity-75 text-emerald-600 dark:text-emerald-400">${t.userReplyAt}</span>` : ''}
+              </div>
+            ` : `<span class="opacity-40 text-[10px] font-mono">No reply</span>`}
+          </td>
+          <td class="p-3 font-mono text-[11px] opacity-80">${t.createdAt}</td>
+          <td class="p-3">${window.getSeverityBadge(t.severity)}</td>
+          <td class="p-3 font-medium">${t.status}</td>
+          <td class="p-3 text-right">
+            <button onclick="openTicketModal('${t.firebaseId}')" class="px-3 py-1 btn-flat-subtle text-[11px] font-semibold">MANAGE</button>
+          </td>
+        </tr>
+      `).join('');
+
+      lucide.createIcons();
+    };
+
+    const liquidGlassDoughnutPlugin = {
+      id: 'liquidGlassDoughnutPlugin',
+      beforeDatasetsDraw(chart) {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.shadowColor = isLiquidGlass
+          ? (isDarkMode ? 'rgba(56, 189, 248, 0.22)' : 'rgba(2, 132, 199, 0.16)')
+          : 'rgba(0, 0, 0, 0.16)';
+        ctx.shadowBlur = isLiquidGlass ? 12 : 8;
+        ctx.shadowOffsetX = 0;
+        ctx.shadowOffsetY = 4;
+      },
+      afterDatasetsDraw(chart) {
+        const { ctx, chartArea } = chart;
+        ctx.restore();
+
+        const meta = chart.getDatasetMeta(0);
+        if (!meta || !meta.data || meta.data.length === 0) return;
+
+        const centerX = (chartArea.left + chartArea.right) / 2;
+        const centerY = (chartArea.top + chartArea.bottom) / 2;
+        const innerRadius = meta.data[0].innerRadius;
+
+        if (innerRadius > 10) {
+          ctx.save();
+          const ringGrad = ctx.createLinearGradient(
+            centerX,
+            centerY - innerRadius,
+            centerX,
+            centerY + innerRadius
+          );
+          if (isLiquidGlass) {
+            ringGrad.addColorStop(0, isDarkMode ? 'rgba(255, 255, 255, 0.12)' : 'rgba(255, 255, 255, 0.85)');
+            ringGrad.addColorStop(1, isDarkMode ? 'rgba(56, 189, 248, 0.03)' : 'rgba(224, 244, 255, 0.35)');
+          } else {
+            ringGrad.addColorStop(0, isDarkMode ? 'rgba(255, 255, 255, 0.05)' : 'rgba(255, 255, 255, 0.55)');
+            ringGrad.addColorStop(1, 'rgba(255, 255, 255, 0.01)');
+          }
+
+          ctx.beginPath();
+          ctx.arc(centerX, centerY, innerRadius * 0.88, 0, Math.PI * 2);
+          ctx.fillStyle = ringGrad;
+          ctx.fill();
+
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = isLiquidGlass
+            ? (isDarkMode ? 'rgba(255, 255, 255, 0.22)' : 'rgba(255, 255, 255, 0.95)')
+            : (isDarkMode ? 'rgba(255, 255, 255, 0.1)' : 'rgba(148, 163, 184, 0.25)');
+          ctx.stroke();
+
+          const total = chart.data.datasets[0].data.reduce((a, b) => a + b, 0);
+          ctx.textAlign = 'center';
+          ctx.textBaseline = 'middle';
+          ctx.fillStyle = isDarkMode ? '#f8fafc' : '#0f172a';
+          ctx.font = "700 18px 'JetBrains Mono', monospace";
+          ctx.fillText(String(total), centerX, centerY - 5);
+
+          ctx.fillStyle = isDarkMode ? 'rgba(226, 232, 240, 0.65)' : 'rgba(51, 65, 85, 0.72)';
+          ctx.font = "600 8px 'Inter', sans-serif";
+          ctx.fillText('TICKETS', centerX, centerY + 11);
+          ctx.restore();
+        }
+      }
+    };
+
+    const liquidGlassBarPlugin = {
+      id: 'liquidGlassBarPlugin',
+      beforeDatasetsDraw(chart) {
+        const { ctx } = chart;
+        ctx.save();
+        ctx.shadowColor = isLiquidGlass
+          ? (isDarkMode ? 'rgba(14, 165, 233, 0.2)' : 'rgba(2, 132, 199, 0.14)')
+          : 'rgba(0, 0, 0, 0.12)';
+        ctx.shadowBlur = isLiquidGlass ? 10 : 6;
+        ctx.shadowOffsetY = 3;
+      },
+      afterDatasetsDraw(chart) {
+        const { ctx } = chart;
+        ctx.restore();
+
+        chart.data.datasets.forEach((dataset, datasetIndex) => {
+          const meta = chart.getDatasetMeta(datasetIndex);
+          meta.data.forEach((bar) => {
+            const { x, y, width, base } = bar;
+            const barHeight = Math.abs(base - y);
+            if (barHeight < 4) return;
+
+            ctx.save();
+            const halfW = width / 2;
+            const glossGrad = ctx.createLinearGradient(x - halfW, y, x + halfW, y);
+            glossGrad.addColorStop(0, 'rgba(255, 255, 255, 0)');
+            glossGrad.addColorStop(0.5, isLiquidGlass ? 'rgba(255, 255, 255, 0.55)' : 'rgba(255, 255, 255, 0.3)');
+            glossGrad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+            ctx.strokeStyle = glossGrad;
+            ctx.lineWidth = 1;
+            ctx.beginPath();
+            ctx.moveTo(x - halfW + 4, y + 1);
+            ctx.lineTo(x + halfW - 4, y + 1);
+            ctx.stroke();
+            ctx.restore();
+          });
+        });
+      }
+    };
+
+    window.renderCharts = function() {
+      const highDpr = Math.max(window.devicePixelRatio || 1, 2);
+
+      const textColor = isLiquidGlass
+        ? (isDarkMode ? '#e0f2fe' : '#06283d')
+        : (isDarkMode ? '#a8a29e' : '#475569');
+      const gridColor = isLiquidGlass
+        ? (isDarkMode ? 'rgba(186, 230, 253, 0.1)' : 'rgba(2, 132, 199, 0.1)')
+        : (isDarkMode ? 'rgba(255, 255, 255, 0.06)' : 'rgba(15, 23, 42, 0.06)');
+
+      const tooltipBg = isDarkMode
+        ? 'rgba(10, 18, 34, 0.88)'
+        : 'rgba(255, 255, 255, 0.92)';
+      const tooltipText = isDarkMode ? '#f8fafc' : '#0f172a';
+      const tooltipBorder = isLiquidGlass
+        ? 'rgba(125, 211, 252, 0.35)'
+        : (isDarkMode ? 'rgba(255, 255, 255, 0.16)' : 'rgba(148, 163, 184, 0.35)');
+
+      const scopedTickets = getFilteredTicketsByTimeframe();
+
+      const sevCounts = { Low: 0, Medium: 0, Critical: 0 };
+      scopedTickets.forEach(t => { if (sevCounts[t.severity] !== undefined) sevCounts[t.severity]++; });
+
+      const ctxSev = document.getElementById('severityChart').getContext('2d');
+      if (severityChartInstance) severityChartInstance.destroy();
+
+      const gLow = ctxSev.createLinearGradient(0, 0, 180, 180);
+      gLow.addColorStop(0, isLiquidGlass ? 'rgba(56, 189, 248, 0.85)' : 'rgba(100, 116, 139, 0.8)');
+      gLow.addColorStop(1, isLiquidGlass ? 'rgba(2, 132, 199, 0.42)' : 'rgba(71, 85, 105, 0.44)');
+
+      const gMed = ctxSev.createLinearGradient(0, 0, 180, 180);
+      gMed.addColorStop(0, isLiquidGlass ? 'rgba(251, 191, 36, 0.88)' : 'rgba(245, 158, 11, 0.84)');
+      gMed.addColorStop(1, isLiquidGlass ? 'rgba(217, 119, 6, 0.44)' : 'rgba(180, 83, 9, 0.46)');
+
+      const gCrit = ctxSev.createLinearGradient(0, 0, 180, 180);
+      gCrit.addColorStop(0, isLiquidGlass ? 'rgba(244, 63, 94, 0.9)' : 'rgba(225, 29, 72, 0.86)');
+      gCrit.addColorStop(1, isLiquidGlass ? 'rgba(190, 18, 60, 0.46)' : 'rgba(159, 18, 57, 0.48)');
+
+      const sevColors = [gLow, gMed, gCrit];
+      const sevBorderColors = isLiquidGlass
+        ? ['rgba(255, 255, 255, 0.36)', 'rgba(255, 255, 255, 0.36)', 'rgba(255, 255, 255, 0.36)']
+        : (isDarkMode
+            ? ['rgba(255, 255, 255, 0.18)', 'rgba(255, 255, 255, 0.18)', 'rgba(255, 255, 255, 0.18)']
+            : ['rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.85)', 'rgba(255, 255, 255, 0.85)']);
+
+      severityChartInstance = new Chart(ctxSev, {
+        type: 'doughnut',
+        data: {
+          labels: ['Low', 'Medium', 'Critical'],
+          datasets: [{
+            data: [sevCounts.Low, sevCounts.Medium, sevCounts.Critical],
+            backgroundColor: sevColors,
+            hoverBackgroundColor: [
+              'rgba(56, 189, 248, 0.95)',
+              'rgba(251, 191, 36, 0.95)',
+              'rgba(244, 63, 94, 0.95)'
+            ],
+            borderColor: sevBorderColors,
+            borderWidth: 1,
+            borderRadius: 10,
+            spacing: 4,
+            hoverOffset: isLiquidGlass ? 12 : 8
+          }]
+        },
+        plugins: [liquidGlassDoughnutPlugin],
+        options: {
+          devicePixelRatio: highDpr,
+          responsive: true,
+          maintainAspectRatio: false,
+          layout: { padding: 6 },
+          animation: {
+            animateScale: true,
+            animateRotate: true,
+            duration: isLiquidGlass ? 1250 : 900,
+            easing: isLiquidGlass ? 'easeOutElastic' : 'easeOutQuart'
+          },
+          plugins: {
+            legend: {
+              position: 'bottom',
+              labels: {
+                color: textColor,
+                usePointStyle: true,
+                pointStyle: 'circle',
+                padding: 14,
+                font: { size: 11, family: "'Inter', sans-serif", weight: '600' }
+              }
+            },
+            tooltip: {
+              backgroundColor: tooltipBg,
+              titleColor: tooltipText,
+              bodyColor: tooltipText,
+              borderColor: tooltipBorder,
+              borderWidth: 1,
+              padding: 10,
+              cornerRadius: 10,
+              displayColors: true,
+              boxPadding: 5
+            }
+          },
+          cutout: '70%'
+        }
+      });
+
+      const categories = Array.from(new Set(scopedTickets.map(t => t.issueType)));
+      const totalData = categories.map(cat => scopedTickets.filter(t => t.issueType === cat).length);
+      const completedData = categories.map(cat => scopedTickets.filter(t => t.issueType === cat && (t.status === 'Resolved' || t.status === 'Closed')).length);
+
+      const ctxIssue = document.getElementById('issueTypeChart').getContext('2d');
+      if (issueTypeChartInstance) issueTypeChartInstance.destroy();
+
+      const gTotal = ctxIssue.createLinearGradient(0, 0, 0, 220);
+      gTotal.addColorStop(0, isLiquidGlass ? 'rgba(56, 189, 248, 0.88)' : 'rgba(100, 116, 139, 0.8)');
+      gTotal.addColorStop(0.6, isLiquidGlass ? 'rgba(14, 165, 233, 0.52)' : 'rgba(100, 116, 139, 0.48)');
+      gTotal.addColorStop(1, isLiquidGlass ? 'rgba(14, 116, 144, 0.24)' : 'rgba(71, 85, 105, 0.22)');
+
+      const gComp = ctxIssue.createLinearGradient(0, 0, 0, 220);
+      gComp.addColorStop(0, isLiquidGlass ? 'rgba(52, 211, 153, 0.9)' : 'rgba(16, 185, 129, 0.84)');
+      gComp.addColorStop(0.6, isLiquidGlass ? 'rgba(16, 185, 129, 0.55)' : 'rgba(16, 185, 129, 0.48)');
+      gComp.addColorStop(1, isLiquidGlass ? 'rgba(5, 150, 105, 0.26)' : 'rgba(5, 150, 105, 0.24)');
+
+      const barBorderColor = isLiquidGlass
+        ? 'rgba(255, 255, 255, 0.34)'
+        : (isDarkMode ? 'rgba(255, 255, 255, 0.16)' : 'rgba(255, 255, 255, 0.8)');
+
+      issueTypeChartInstance = new Chart(ctxIssue, {
+        type: 'bar',
+        data: {
+          labels: categories,
+          datasets: [
+            {
+              label: 'Total Issues',
+              data: totalData,
+              backgroundColor: gTotal,
+              hoverBackgroundColor: 'rgba(56, 189, 248, 0.95)',
+              borderColor: barBorderColor,
+              borderWidth: 1,
+              borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 3, bottomRight: 3 },
+              borderSkipped: false,
+              barPercentage: 0.72,
+              categoryPercentage: 0.68
+            },
+            {
+              label: 'Completed Issues',
+              data: completedData,
+              backgroundColor: gComp,
+              hoverBackgroundColor: 'rgba(52, 211, 153, 0.96)',
+              borderColor: barBorderColor,
+              borderWidth: 1,
+              borderRadius: { topLeft: 8, topRight: 8, bottomLeft: 3, bottomRight: 3 },
+              borderSkipped: false,
+              barPercentage: 0.72,
+              categoryPercentage: 0.68
+            }
+          ]
+        },
+        plugins: [liquidGlassBarPlugin],
+        options: {
+          devicePixelRatio: highDpr,
+          responsive: true,
+          maintainAspectRatio: false,
+          animation: {
+            duration: isLiquidGlass ? 1150 : 850,
+            easing: isLiquidGlass ? 'easeOutBack' : 'easeOutQuart'
+          },
+          scales: {
+            x: {
+              ticks: { color: textColor, font: { size: 10, family: "'Inter', sans-serif", weight: '600' } },
+              grid: { display: false },
+              border: { color: gridColor }
+            },
+            y: {
+              beginAtZero: true,
+              ticks: { color: textColor, stepSize: 1, font: { family: "'JetBrains Mono', monospace", weight: '600' } },
+              grid: { color: gridColor },
+              border: { display: false }
+            }
+          },
+          plugins: {
+            legend: { display: false },
+            tooltip: {
+              backgroundColor: tooltipBg,
+              titleColor: tooltipText,
+              bodyColor: tooltipText,
+              borderColor: tooltipBorder,
+              borderWidth: 1,
+              padding: 10,
+              cornerRadius: 10,
+              boxPadding: 5
+            }
+          }
+        }
+      });
+    };
+
+    window.openTicketModal = function(firebaseId) {
+      const ticket = tickets.find(t => t.firebaseId === firebaseId);
+      if (!ticket) return;
+
+      activeEditingTicketId = firebaseId;
+      document.getElementById('modalTicketId').innerText = ticket.id;
+      document.getElementById('modalTicketSeverity').innerHTML = window.getSeverityBadge(ticket.severity);
+      document.getElementById('modalIssueType').innerText = ticket.issueType;
+      document.getElementById('modalUser').innerText = ticket.employee;
+      document.getElementById('modalEmpId').innerText = ticket.empId;
+      document.getElementById('modalDescription').innerText = ticket.description;
+      document.getElementById('modalStatusSelect').value = ticket.status;
+      document.getElementById('modalResolutionNotes').value = ticket.notes || '';
+
+      const techSelectEl = document.getElementById('modalTechAssigneeSelect');
+      const techInputEl = document.getElementById('modalTechAssignee');
+
+      if (currentUser && currentUser.role === 'superadmin') {
+        techInputEl.classList.add('hidden');
+        techSelectEl.classList.remove('hidden');
+
+        const adminUsers = accounts.filter(acc => acc.role === 'admin');
+        let optionsHtml = `<option value="Unassigned">Unassigned</option>`;
+        optionsHtml += adminUsers.map(adm => `<option value="${adm.username}">${adm.username} (ID: ${adm.empId})</option>`).join('');
+
+        if (ticket.assignee && ticket.assignee !== 'Unassigned' && !adminUsers.some(a => a.username === ticket.assignee)) {
+          optionsHtml += `<option value="${ticket.assignee}">${ticket.assignee}</option>`;
+        }
+
+        techSelectEl.innerHTML = optionsHtml;
+        techSelectEl.value = ticket.assignee || 'Unassigned';
+      } else if (currentUser && currentUser.role === 'admin') {
+        techSelectEl.classList.add('hidden');
+        techInputEl.classList.remove('hidden');
+        techInputEl.value = currentUser.username;
+        techInputEl.readOnly = true;
+      } else {
+        techSelectEl.classList.add('hidden');
+        techInputEl.classList.remove('hidden');
+        techInputEl.value = ticket.assignee || '';
+        techInputEl.readOnly = false;
+      }
+
+      const replyContainer = document.getElementById('modalUserReplyContainer');
+      const replyText = document.getElementById('modalUserReplyText');
+      const replyTime = document.getElementById('modalUserReplyTime');
+      if (ticket.userReply) {
+        replyContainer.classList.remove('hidden');
+        replyText.innerText = ticket.userReply;
+        if (replyTime) {
+          replyTime.innerText = ticket.userReplyAt ? `Replied: ${ticket.userReplyAt}` : '';
+        }
+      } else {
+        replyContainer.classList.add('hidden');
+        replyText.innerText = '';
+        if (replyTime) replyTime.innerText = '';
+      }
+
+      document.getElementById('ticketDetailModal').classList.remove('hidden');
+    };
+
+    window.closeTicketModal = function() {
+      document.getElementById('ticketDetailModal').classList.add('hidden');
+      activeEditingTicketId = null;
+    };
+
+    window.saveTicketUpdates = async function() {
+      if (!activeEditingTicketId) return;
+
+      const targetTicket = tickets.find(t => t.firebaseId === activeEditingTicketId);
+      if (!targetTicket) return;
+
+      const oldStatus = targetTicket.status;
+      const newStatus = document.getElementById('modalStatusSelect').value;
+      const newNotes = document.getElementById('modalResolutionNotes').value;
+      const notesTimestamp = newNotes.trim() ? formatMaldivesTimestamp() : '';
+
+      let newAssignee = 'Unassigned';
+      if (currentUser && currentUser.role === 'superadmin') {
+        newAssignee = document.getElementById('modalTechAssigneeSelect').value;
+      } else if (currentUser && currentUser.role === 'admin') {
+        newAssignee = currentUser.username;
+      } else {
+        newAssignee = document.getElementById('modalTechAssignee').value;
+      }
+
+      try {
+        const ticketRef = doc(db, 'artifacts', appId, 'public', 'data', 'tickets', activeEditingTicketId);
+
+        await updateDoc(ticketRef, {
+          status: newStatus,
+          assignee: newAssignee,
+          notes: newNotes,
+          notesUpdatedAt: notesTimestamp
+        });
+
+        if (oldStatus !== newStatus || targetTicket.assignee !== newAssignee) {
+          await sendTelegramStatusAlert(targetTicket, oldStatus, newStatus, newAssignee, newNotes);
+        }
+
+        closeTicketModal();
+        showToast(`Ticket updated (Tech: ${newAssignee}) & Telegram notified!`, 'success', true);
+      } catch (err) {
+        showToast('Failed to update ticket in cloud.', 'error', true);
+      }
+    };
+
+    function getTicketsByCleanupCriteria() {
+      const mode = document.getElementById('cleanupModeSelect') ? document.getElementById('cleanupModeSelect').value : 'day';
+      const dateVal = document.getElementById('actionTargetDate').value;
+      
+      if (!dateVal) {
+        showToast('Please select a valid target date.', 'error', true);
+        return { matched: [], label: '' };
+      }
+
+      const dateMatch = dateVal.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+      if (!dateMatch) {
+        showToast('Invalid date provided.', 'error', true);
+        return { matched: [], label: '' };
+      }
+
+      const selYear = parseInt(dateMatch[1], 10);
+      const selMonth = parseInt(dateMatch[2], 10);
+      const selDay = parseInt(dateMatch[3], 10);
+
+      let matched = [];
+      let label = '';
+
+      if (mode === 'day') {
+        matched = tickets.filter(t => {
+          const p = extractTicketCalendarParts(t);
+          return p && p.year === selYear && p.month === selMonth && p.day === selDay;
+        });
+        label = `Specific Date (${dateVal})`;
+      } else if (mode === 'month') {
+        matched = tickets.filter(t => {
+          const p = extractTicketCalendarParts(t);
+          return p && p.year === selYear && p.month === selMonth;
+        });
+        label = `Entire Month (${dateVal.substring(0, 7)})`;
+      } else {
+        matched = tickets.filter(t => {
+          const p = extractTicketCalendarParts(t);
+          return p && p.year === selYear;
+        });
+        label = `Entire Year (${selYear})`;
+      }
+
+      return { matched, label };
+    }
+
+    window.executeActionExport = function() {
+      const { matched, label } = getTicketsByCleanupCriteria();
+
+      if (matched.length === 0) {
+        showToast(`No ticket records found for ${label}.`, 'error', true);
+        return;
+      }
+
+      let csvContent = "data:text/csv;charset=utf-8,TicketID,Employee,EmpID,Category,Severity,Status,CreatedAt,UserReply,UserReplyAt,TechNotes\n";
+      matched.forEach(t => {
+        const row = [
+          t.id,
+          t.employee,
+          t.empId,
+          `"${t.issueType}"`,
+          t.severity,
+          t.status,
+          `"${t.createdAt}"`,
+          `"${t.userReply || ''}"`,
+          `"${t.userReplyAt || ''}"`,
+          `"${t.notes || ''}"`
+        ];
+        csvContent += row.join(",") + "\n";
+      });
+
+      const encodedUri = encodeURI(csvContent);
+      const link = document.createElement("a");
+      link.setAttribute("href", encodedUri);
+      link.setAttribute("download", `KFC_IT_Tickets_${label.replace(/[^a-zA-Z0-9]/g, '_')}_export.csv`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      showToast(`Successfully exported ${matched.length} tickets for ${label}!`, 'success', true);
+    };
+
+    window.executeActionClear = function() {
+      const { matched, label } = getTicketsByCleanupCriteria();
+
+      if (matched.length === 0) {
+        showToast(`No ticket records found to clear for ${label}.`, 'info');
+        return;
+      }
+
+      openConfirmModal(
+        `Confirm Clear Tickets (${label})`,
+        `Are you sure you want to permanently delete ${matched.length} ticket(s) for ${label}? This action cannot be undone.`,
+        () => confirmClearExecution(matched, label)
+      );
+    };
+
+    async function confirmClearExecution(targets, label) {
+      try {
+        for (let t of targets) {
+          if (t.firebaseId) {
+            await deleteDoc(doc(db, 'artifacts', appId, 'public', 'data', 'tickets', t.firebaseId));
+          }
+        }
+        showToast(`Successfully cleared ${targets.length} ticket(s) for ${label}.`, 'success', true);
+      } catch (err) {
+        showToast(`Error clearing tickets: ${err.message}`, 'error', true);
+      }
+    }
+
+    window.switchModal = function(fromModalId, toModalOpenFn) {
+      const fromEl = document.getElementById(fromModalId);
+      if (fromEl) fromEl.classList.add('hidden');
+      setTimeout(() => { toModalOpenFn(); }, 50);
+    };
+
+    window.openPasswordResetModal = function() {
+      const select = document.getElementById('resetTargetUser');
+      let availableAccounts = accounts;
+      if (currentUser && currentUser.role === 'admin') {
+        availableAccounts = accounts.filter(a => a.role === 'user');
+      }
+      select.innerHTML = availableAccounts.map(a => `<option value="${a.username}">${a.username} (ID: ${a.empId}) - [${a.role.toUpperCase()}]</option>`).join('');
+      document.getElementById('createUserModal').classList.add('hidden');
+      document.getElementById('passwordResetModal').classList.remove('hidden');
+    };
+
+    window.closePasswordResetModal = function() {
+      document.getElementById('passwordResetModal').classList.add('hidden');
+    };
+
+    window.handlePasswordResetTool = async function(e) {
+      e.preventDefault();
+      const userName = document.getElementById('resetTargetUser').value;
+      const pass = document.getElementById('resetNewPassword').value.trim();
+      const acc = accounts.find(a => a.username === userName);
+      
+      if (acc) {
+        if (currentUser && currentUser.role === 'admin' && acc.role !== 'user') {
+          showToast('Admins can only reset Staff/User passwords. Super Admin required.', 'error', true);
+          return;
+        }
+
+        acc.password = pass;
+        if (acc.firebaseId) {
+          try {
+            const userRef = doc(db, 'artifacts', appId, 'public', 'data', 'users', acc.firebaseId);
+            await updateDoc(userRef, { password: pass });
+          } catch (err) {}
+        }
+        closePasswordResetModal();
+        document.getElementById('resetNewPassword').value = '';
+        showToast(`Password updated for ${userName}`, 'success', true);
+      }
+    };
+
+    window.openCreateUserModal = function() {
+      const roleSelect = document.getElementById('newUserRole');
+      if (roleSelect) {
+        if (currentUser && currentUser.role === 'superadmin') {
+          roleSelect.innerHTML = `
+            <option value="user">Staff / User</option>
+            <option value="admin">Administrator</option>
+            <option value="superadmin">Super Administrator</option>
+          `;
+        } else {
+          roleSelect.innerHTML = `
+            <option value="user">Staff / User</option>
+          `;
+        }
+      }
+      document.getElementById('passwordResetModal').classList.add('hidden');
+      document.getElementById('createUserModal').classList.remove('hidden');
+    };
+
+    window.closeCreateUserModal = function() {
+      document.getElementById('createUserModal').classList.add('hidden');
+    };
+
+    window.handleCreateUser = async function(e) {
+      e.preventDefault();
+      const uName = document.getElementById('newUsername').value.trim();
+      const eId = document.getElementById('newEmployeeId').value.trim();
+      const uPass = document.getElementById('newUserPassword').value.trim();
+      const uRole = document.getElementById('newUserRole').value;
+
+      if (currentUser && currentUser.role === 'admin' && uRole !== 'user') {
+        showToast('Admins can only create standard Staff/User accounts.', 'error', true);
+        return;
+      }
+
+      if (!/^\d{6}$/.test(eId)) {
+        showToast('Employee ID must be exactly 6 numeric digits.', 'error', true);
+        return;
+      }
+
+      if (accounts.some(a => a.username.toLowerCase() === uName.toLowerCase() || a.empId === eId)) {
+        showToast('Username or Employee ID already registered.', 'error', true);
+        return;
+      }
+
+      const newUser = {
+        username: uName,
+        empId: eId,
+        password: uPass,
+        role: uRole
+      };
+
+      try {
+        const docRef = await addDoc(getColRef("users"), newUser);
+        newUser.firebaseId = docRef.id;
+        accounts.push(newUser);
+
+        closeCreateUserModal();
+        document.getElementById('newUsername').value = '';
+        document.getElementById('newEmployeeId').value = '';
+        document.getElementById('newUserPassword').value = '';
+        showToast(`${uRole.toUpperCase()} account "${uName}" registered and saved to cloud!`, 'success', true);
+      } catch (err) {
+        showToast(`Error saving user: ${err.message}`, 'error', true);
+      }
+    };
+
+    window.onload = function() {
+      lucide.createIcons();
+      initCloudData();
+    };
+  </script>
+</body>
+</html>
