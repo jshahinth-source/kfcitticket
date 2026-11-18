@@ -1,0 +1,20 @@
+{
+  "name": "Kooddoo Fisheries Complex IT Ticketing System",
+  "short_name": "KFC IT",
+  "start_url": "./index.html",
+  "display": "standalone",
+  "background_color": "#0f0e0d",
+  "theme_color": "#0f0e0d",
+  "icons": [
+    {
+      "src": "one.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "two.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ]
+}

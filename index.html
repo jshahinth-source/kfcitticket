@@ -6,6 +6,10 @@
   <meta name="theme-color" id="metaThemeColor" content="#0f0e0d" />
   <title>Kooddoo Fisheries Complex IT Ticketing System</title>
   
+  <!-- PWA MANIFEST LINK FOR GITHUB PAGES -->
+  <link rel="manifest" href="./manifest.json">
+  <link rel="apple-touch-icon" href="one.png"> // icon changing rename
+
   <!-- Tailwind CSS & Google Fonts -->
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -1534,6 +1538,15 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
     import { getFirestore, collection, addDoc, getDocs, doc, updateDoc, deleteDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    // SERVICE WORKER REGISTRATION FOR PWA INSTALLATION
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('./sw.js')
+          .then((reg) => console.log('Service Worker registered successfully:', reg.scope))
+          .catch((err) => console.log('Service Worker registration failed:', err));
+      });
+    }
 
     const firebaseConfig = {
       apiKey: "AIzaSyCqOQv9xVEm8qbHHugixm2rsF0g91Zo1dk",
@@ -3555,7 +3568,7 @@
         return;
       }
 
-      if (accounts.some(a => a.username.toLowerCase() === uName.toLowerCase() || a.empId === eId)) {
+      if (accounts.some(a => a.username.toLowerCase() === uName.toLowerCase() === uName.toLowerCase() || a.empId === eId)) {
         showToast('Username or Employee ID already registered.', 'error', true);
         return;
       }
