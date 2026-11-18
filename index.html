@@ -62,8 +62,6 @@
     body {
       -webkit-overflow-scrolling: touch;
       overscroll-behavior-y: none;
-      -webkit-transform: translate3d(0, 0, 0);
-      transform: translate3d(0, 0, 0);
     }
 
     .smooth-scroll-area {
@@ -419,13 +417,19 @@
     }
 
     @keyframes glassScaleIn {
-      0% { opacity: 0; transform: scale(0.97) translateY(10px); }
+      0% { opacity: 0; transform: scale(0.97) translateY(-10px); }
       100% { opacity: 1; transform: scale(1) translateY(0); }
     }
     
     .animate-glass-in { animation: glassScaleIn 0.38s var(--fluid-silk) forwards; }
     
+    /* OPTIMIZED TOP-VIEWPORT MODAL OVERLAY */
     .modal-backdrop {
+      position: fixed !important;
+      inset: 0 !important;
+      z-index: 100 !important;
+      overflow-y: auto !important;
+      overscroll-behavior: contain;
       transition: opacity 0.3s var(--fluid-silk);
       backdrop-filter: blur(22px) saturate(150%);
       -webkit-backdrop-filter: blur(22px) saturate(150%);
@@ -663,7 +667,7 @@
     }
 
     /* ============================================================================
-       MOBILE PHONE OPTIMIZED FULL-SCREEN MODE
+       MOBILE PHONE OPTIMIZED FULL-SCREEN MODE & BOTTOM DOCK ALIGNMENT
     ============================================================================ */
     html.mobile-view {
       height: 100%;
@@ -673,7 +677,7 @@
       min-height: 100dvh;
       display: flex;
       flex-direction: column;
-      padding-bottom: calc(82px + env(safe-area-inset-bottom, 0px));
+      padding-bottom: calc(100px + env(safe-area-inset-bottom, 0px)) !important;
     }
 
     html.mobile-view body::before,
@@ -724,7 +728,6 @@
       flex-direction: column;
     }
 
-    /* FIXED: Only display portals in mobile view when NOT hidden */
     html.mobile-view #userPortal:not(.hidden),
     html.mobile-view #adminPortal:not(.hidden) {
       flex: 1 1 auto;
@@ -738,7 +741,7 @@
       flex-direction: column !important;
       flex: 1 1 auto;
       width: 100% !important;
-      padding: 12px !important;
+      padding: 12px 12px 110px 12px !important;
       gap: 12px !important;
     }
 
@@ -765,7 +768,7 @@
       width: 100% !important;
       max-width: 100% !important;
       flex: 1 1 auto;
-      padding: 12px !important;
+      padding: 12px 12px 110px 12px !important;
       gap: 12px !important;
     }
 
@@ -820,14 +823,14 @@
       transform: translateZ(0) !important;
       width: 100% !important;
       max-width: 100% !important;
-      z-index: 45;
+      z-index: 100 !important;
       border-radius: 22px 22px 0 0 !important;
       border-bottom: none !important;
       border-left: none !important;
       border-right: none !important;
-      padding: 8px 10px calc(8px + env(safe-area-inset-bottom, 0px)) 10px !important;
-      gap: 6px;
-      box-shadow: 0 -10px 30px rgba(0, 0, 0, 0.35) !important;
+      padding: 10px 12px calc(10px + env(safe-area-inset-bottom, 0px)) 12px !important;
+      gap: 8px;
+      box-shadow: 0 -12px 36px rgba(0, 0, 0, 0.45) !important;
     }
 
     .mobile-tab-btn {
@@ -945,8 +948,8 @@
     </div>
   </header>
 
-  <!-- NOTIFICATION TOAST LAYER -->
-  <div id="toastContainer" class="fixed top-20 right-4 sm:right-5 z-50 flex flex-col gap-2 pointer-events-none max-w-[92vw]"></div>
+  <!-- NOTIFICATION TOAST LAYER (VIEWPORT TOP LOCKED) -->
+  <div id="toastContainer" class="fixed top-16 sm:top-20 right-4 sm:right-5 z-[110] flex flex-col gap-2 pointer-events-none max-w-[92vw]"></div>
 
   <!-- MAIN APP CONTAINER -->
   <div id="app" class="flex-1 flex flex-col relative z-10">
@@ -1387,10 +1390,10 @@
   </div>
 
 
-  <!-- MODALS SECTION -->
+  <!-- MODALS SECTION (VIEWPORT TOP-ALIGNED FOR INSTANT VISIBILITY ON MOBILE & PC) -->
   <!-- Modal 1: Ticket Detail & Resolution -->
-  <div id="ticketDetailModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
-    <div class="canvas-panel w-full max-w-lg p-6 space-y-4 relative animate-glass-in shadow-2xl max-h-[90vh] overflow-y-auto smooth-scroll-area">
+  <div id="ticketDetailModal" class="fixed inset-0 z-[100] hidden flex items-start justify-center p-4 pt-10 sm:pt-16 pb-10 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-lg p-6 space-y-4 relative animate-glass-in shadow-2xl max-h-[85dvh] overflow-y-auto smooth-scroll-area">
       <button onclick="closeTicketModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono font-semibold">X</button>
 
       <div class="flex items-center gap-2">
@@ -1448,8 +1451,8 @@
   </div>
 
   <!-- Modal 2: Password Reset -->
-  <div id="passwordResetModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
-    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl">
+  <div id="passwordResetModal" class="fixed inset-0 z-[100] hidden flex items-start justify-center p-4 pt-12 sm:pt-20 pb-10 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl max-h-[85dvh] overflow-y-auto smooth-scroll-area">
       <button onclick="closePasswordResetModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono">X</button>
       <h3 class="font-bold text-sm uppercase tracking-wider">IT PASSWORD RESET TOOL</h3>
 
@@ -1475,8 +1478,8 @@
   </div>
 
   <!-- Modal 3: Create User Account -->
-  <div id="createUserModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
-    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl">
+  <div id="createUserModal" class="fixed inset-0 z-[100] hidden flex items-start justify-center p-4 pt-10 sm:pt-16 pb-10 bg-black/75 modal-backdrop">
+    <div class="canvas-panel w-full max-w-md p-6 space-y-4 relative animate-glass-in shadow-2xl max-h-[85dvh] overflow-y-auto smooth-scroll-area">
       <button onclick="closeCreateUserModal()" class="absolute top-4 right-4 px-2.5 py-1 btn-flat-subtle text-xs font-mono">X</button>
       <h3 class="font-bold text-sm uppercase tracking-wider">REGISTER NEW ACCOUNT</h3>
 
@@ -1513,7 +1516,7 @@
   </div>
 
   <!-- Modal 4: Generic Confirmation Popup Modal -->
-  <div id="confirmModal" class="fixed inset-0 z-50 hidden flex items-center justify-center p-4 bg-black/75 modal-backdrop">
+  <div id="confirmModal" class="fixed inset-0 z-[100] hidden flex items-start justify-center p-4 pt-16 sm:pt-24 pb-10 bg-black/75 modal-backdrop">
     <div class="canvas-panel w-full max-w-sm p-6 space-y-4 relative animate-glass-in text-center shadow-2xl">
       <div id="confirmIconContainer" class="inline-flex items-center justify-center w-12 h-12 bg-slate-800 dark:bg-stone-800/80 text-white border border-white/15 mb-1 rounded-2xl">
         <i data-lucide="help-circle" class="w-6 h-6"></i>
@@ -1959,7 +1962,6 @@
       setTimeframeMode('month');
       setUserTicketScope('today');
       
-      // Ensure strict initial state: Login View active, portals and bottom docks hidden
       showView('loginView');
 
       if (window.innerWidth < 768) {
@@ -2239,7 +2241,9 @@
         closeConfirmModal();
         onConfirm();
       };
-      document.getElementById('confirmModal').classList.remove('hidden');
+      const modal = document.getElementById('confirmModal');
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
     };
 
     window.closeConfirmModal = function() {
@@ -2320,7 +2324,6 @@
       userPortal.classList.add('hidden');
       adminPortal.classList.add('hidden');
 
-      // Enforce strict role-based view gating and bottom dock rendering
       if (viewId === 'loginView') {
         loginView.classList.remove('hidden');
         loginView.classList.remove('animate-glass-in');
@@ -2328,7 +2331,6 @@
         loginView.classList.add('animate-glass-in');
       } else if (viewId === 'userPortal') {
         if (!currentUser || currentUser.role !== 'user') {
-          // Fallback protection if unauthenticated or unauthorized role attempts to access
           loginView.classList.remove('hidden');
           return;
         }
@@ -3298,7 +3300,9 @@
         if (replyTime) replyTime.innerText = '';
       }
 
-      document.getElementById('ticketDetailModal').classList.remove('hidden');
+      const modal = document.getElementById('ticketDetailModal');
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
     };
 
     window.closeTicketModal = function() {
@@ -3470,7 +3474,9 @@
       }
       select.innerHTML = availableAccounts.map(a => `<option value="${a.username}">${a.username} (ID: ${a.empId}) - [${a.role.toUpperCase()}]</option>`).join('');
       document.getElementById('createUserModal').classList.add('hidden');
-      document.getElementById('passwordResetModal').classList.remove('hidden');
+      const modal = document.getElementById('passwordResetModal');
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
     };
 
     window.closePasswordResetModal = function() {
@@ -3518,7 +3524,9 @@
         }
       }
       document.getElementById('passwordResetModal').classList.add('hidden');
-      document.getElementById('createUserModal').classList.remove('hidden');
+      const modal = document.getElementById('createUserModal');
+      modal.classList.remove('hidden');
+      modal.scrollTop = 0;
     };
 
     window.closeCreateUserModal = function() {
